@@ -2,8 +2,8 @@
 
 namespace RO.DevTest.Application.Contracts.Persistance.Repositories;
 
-public interface IBaseRepository<T> where T : class {
-
+public interface IBaseRepository<T> where T : class 
+{
     /// <summary>
     /// Creates a new entity in the database
     /// </summary>
@@ -21,17 +21,19 @@ public interface IBaseRepository<T> where T : class {
     /// </param>
     /// <returns>
     /// The <typeparamref name="T"/> entity, if found. Null otherwise. </returns>
-    T? Get(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+    Task<T?> GetAsync(CancellationToken cancellationToken, Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
 
     /// <summary>
-    /// Updates an entity entry on the database
+    /// Updates the specified entity in the database context
+    /// and persists the changes.
     /// </summary>
-    /// <param name="entity"> The entity to be added </param>
-    void Update(T entity);
+    /// <param name="entity">The entity to update</param>
+    Task UpdateAsync(T entity, CancellationToken cancellationToken);
+
 
     /// <summary>
     /// Deletes one entry from the database
     /// </summary>
     /// <param name="entity"> The entity to be deleted </param>
-    void Delete(T entity);
+    Task DeleteAsync(T entity, CancellationToken cancellationToken);
 }
