@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Domain.Entities;
+using RO.DevTest.Domain.Entities.Identity;
 using RO.DevTest.Infrastructure.Abstractions;
 using RO.DevTest.Persistence;
 

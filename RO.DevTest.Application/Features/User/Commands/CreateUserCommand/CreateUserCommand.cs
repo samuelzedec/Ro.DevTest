@@ -11,8 +11,8 @@ public class CreateUserCommand : IRequest<CreateUserResult> {
     public string PasswordConfirmation { get; set; } = string.Empty;
     public UserRoles Role { get; set; }
 
-    public Domain.Entities.User AssignTo() {
-        return new Domain.Entities.User {
+    public Domain.Entities.Identity.User AssignTo() {
+        return new Domain.Entities.Identity.User {
             UserName = UserName,
             Email = Email,
             Name = Name,

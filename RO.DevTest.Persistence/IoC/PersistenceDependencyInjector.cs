@@ -16,13 +16,7 @@ public static class PersistenceDependencyInjector
     /// <returns>
     /// The <see cref="IServiceCollection"/> with dependencies injected
     /// </returns>
-    public static IServiceCollection InjectPersistenceDependencies(this IServiceCollection services, IConfigurationManager configuration)
-    {
-        services.AddDefaultContext(configuration);
-        return services;
-    }
-
-    private static IServiceCollection AddDefaultContext(this IServiceCollection services, IConfigurationManager configuration)
+    public static void InjectPersistenceDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<DefaultContext>(options =>
         {
@@ -30,7 +24,5 @@ public static class PersistenceDependencyInjector
                 configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly("RO.DevTest.Persistence"));
         });
-
-        return services;
     }
 }

@@ -32,7 +32,9 @@ public class BaseRepository<T>(DefaultContext context)
         Expression<Func<T, bool>> predicate, 
         params Expression<Func<T, object>>[] includes
     )
-        => await GetQueryWithIncludes(predicate, includes).FirstOrDefaultAsync(cancellationToken);
+        => await GetQueryWithIncludes(predicate, includes)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
 
     /// <summary>
     /// Generates a filtered <see cref="IQueryable{T}"/>, based on its
