@@ -14,13 +14,12 @@ public class IdentityAbstractor : IIdentityAbstractor
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<Role> _roleManager;
 
     public IdentityAbstractor(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
-        RoleManager<IdentityRole> roleManager
-    )
+        RoleManager<Role> roleManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -57,7 +56,7 @@ public class IdentityAbstractor : IIdentityAbstractor
     {
         if (await _roleManager.RoleExistsAsync(role.ToString()) is false)
         {
-            await _roleManager.CreateAsync(new IdentityRole { Name = role.ToString() });
+            await _roleManager.CreateAsync(new Role { Name = role.ToString() });
         }
 
         return await _userManager.AddToRoleAsync(user, role.ToString());
