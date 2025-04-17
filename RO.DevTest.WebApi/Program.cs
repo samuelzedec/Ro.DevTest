@@ -10,8 +10,6 @@ public class Program {
         builder.AddPipeline();
 
         var app = builder.Build();
-        
+        app.UseServices();
     }
-
-
 }
