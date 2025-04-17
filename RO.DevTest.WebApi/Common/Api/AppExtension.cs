@@ -2,7 +2,7 @@ namespace RO.DevTest.WebApi.Common.Api;
 
 public static class AppExtension
 {
-    public static void RegisterServices(this WebApplication app)
+    public static void UseServices(this WebApplication app)
     {
         app.UseSecurity();
         app.UseDevelopmentEnvironment();

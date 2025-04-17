@@ -8,4 +8,5 @@ namespace RO.DevTest.Domain.Entities.Identity;
 public class User : IdentityUser<Guid>
 {
     public string Name { get; set; } = string.Empty;
+    public List<string> Roles = [];
 }
