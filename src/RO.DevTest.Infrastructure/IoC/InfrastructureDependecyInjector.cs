@@ -21,7 +21,7 @@ public static class InfrastructureDependecyInjector {
     /// </returns>
     public static IServiceCollection InjectInfrastructureDependencies(this IServiceCollection services) {
         services.AddDefaultIdentity<User>()
-            .AddRoles<IdentityRole>()
+            .AddRoles<Role>()
             .AddEntityFrameworkStores<DefaultContext>()
             .AddDefaultTokenProviders();
 

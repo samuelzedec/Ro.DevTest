@@ -12,10 +12,11 @@ public static class AppExtension
     
     private static void UseDevelopmentEnvironment(this WebApplication app)
     {
-        if (!app.Environment.IsDevelopment()) return;
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        app.MapSwagger().RequireAuthorization();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
     }
     
     private static void UseSecurity(this WebApplication app)
