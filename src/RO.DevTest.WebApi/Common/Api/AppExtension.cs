@@ -17,6 +17,7 @@ public static class AppExtension
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
     }
     
     private static void UseSecurity(this WebApplication app)

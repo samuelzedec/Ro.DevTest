@@ -19,8 +19,7 @@ public class IdentityAbstractor : IIdentityAbstractor
     public IdentityAbstractor(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
-        RoleManager<Role> roleManager
-    )
+        RoleManager<Role> roleManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
