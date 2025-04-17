@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace RO.DevTest.Domain.Entities;
+namespace RO.DevTest.Domain.Entities.Identity;
 
 /// <summary>
 /// Represents a <see cref="IdentityUser"/> int the API
 /// </summary>
-public class User : IdentityUser {
-    /// <summary>
-    /// Name of the user
-    /// </summary>
+public class User : IdentityUser<Guid>
+{
     public string Name { get; set; } = string.Empty;
-
-    public User() : base() { }
 }

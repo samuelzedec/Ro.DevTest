@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using RO.DevTest.Domain.Entities;
+using RO.DevTest.Domain.Entities.Identity;
 using RO.DevTest.Domain.Enums;
 
 namespace RO.DevTest.Application.Contracts.Infrastructure;
