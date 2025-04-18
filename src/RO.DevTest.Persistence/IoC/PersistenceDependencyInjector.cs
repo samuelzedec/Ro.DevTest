@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RO.DevTest.Application.Contracts.Persistance.Repositories;
+using RO.DevTest.Persistence.Repositories;
 
 namespace RO.DevTest.Persistence.IoC;
 
@@ -24,5 +26,8 @@ public static class PersistenceDependencyInjector
                 configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly("RO.DevTest.Persistence"));
         });
+
+        services.AddTransient<IUserRepository, UserRepository>();
+        
     }
 }
