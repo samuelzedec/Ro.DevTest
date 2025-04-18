@@ -44,7 +44,7 @@ public class UserTokenMap : IEntityTypeConfiguration<UserToken>
         builder
             .Property(ut => ut.ExpiresAt)
             .HasColumnName("expires_at")
-            .HasColumnType("TIMESTAMP")
+            .HasColumnType("TIMESTAMP WITH TIME ZONE")
             .IsRequired();
     }
 }

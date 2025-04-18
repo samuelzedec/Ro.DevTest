@@ -23,6 +23,19 @@ public interface IIdentityAbstractor {
     /// otherwise
     /// </returns>
     Task<User?> FindUserByIdAsync(string userId);
+    
+    /// <summary>
+    /// Finds a <see cref="User"/> through its username
+    /// asynchronously
+    /// </summary>
+    /// <param name="userName">
+    /// The <see cref="User"/>'s username to search for
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/> if found, <see cref="null"/>
+    /// otherwise
+    /// </returns>
+    Task<User?> FindUserByNameAsync(string userName);
 
     /// <summary>
     /// Finds a <see cref="User"/> through its
@@ -80,6 +93,16 @@ public interface IIdentityAbstractor {
     /// </returns>
     Task<IdentityResult> CreateUserAsync(User user, string password);
 
+    /// <summary>
+    /// Updates a <see cref="User"/> entity in the Identity system
+    /// asynchronously
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> with updated values to be saved
+    /// </param>
+    /// <returns>
+    /// An <see cref="IdentityResult"/> representing the outcome of the update operation
+    /// </returns>
     Task<IdentityResult> UpdateUserAsync(User user);
 
     /// <summary>

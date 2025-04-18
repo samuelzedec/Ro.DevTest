@@ -1,9 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Entities.Identity;
-using RO.DevTest.Domain.Enums;
 
 namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 
@@ -42,12 +42,12 @@ public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor, IL
 
             var role = await identityAbstractor.GetUserRolesAsync(newUser);
             return Result<CreateUserResult>.Success(
-                new CreateUserResult(newUser, role.ToList().FirstOrDefault()!), 201);
+                new CreateUserResult(newUser, role.ToList().FirstOrDefault()!), StatusCodes.Status201Created, "User created successfully");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<CreateUserResult>.Failure(messages: ex.Message);
+            return Result<CreateUserResult>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 }
