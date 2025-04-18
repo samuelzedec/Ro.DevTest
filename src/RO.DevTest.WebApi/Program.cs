@@ -11,5 +11,6 @@ public class Program {
 
         var app = builder.Build();
         app.UseServices();
+        app.Run();
     }
 }

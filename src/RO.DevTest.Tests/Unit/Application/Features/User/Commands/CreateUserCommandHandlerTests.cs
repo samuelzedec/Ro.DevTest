@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
@@ -10,9 +11,9 @@ public class CreateUserCommandHandlerTests {
     private readonly Mock<IIdentityAbstractor> _identityAbstractorMock = new();
     private readonly CreateUserCommandHandler _sut;
 
-    public CreateUserCommandHandlerTests() { 
-        _sut = new (_identityAbstractorMock.Object);
-    }
+    // public CreateUserCommandHandlerTests() { 
+    //     _sut = new (_identityAbstractorMock.Object);
+    // }
 
     [Fact(DisplayName = "Given invalid email should throw a BadRequestException")]
     public void Handle_WhenEmailIsNullOrEmpty_ShouldRaiseABadRequestExcpetion() {

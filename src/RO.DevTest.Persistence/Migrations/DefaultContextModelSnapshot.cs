@@ -151,13 +151,14 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnName("password_hash");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("VARCHAR")
                         .HasColumnName("phone_number");
 
                     b.Property<bool>("PhoneNumberConfirmed")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("BOOLEAN")
+                        .HasDefaultValue(false)
                         .HasColumnName("phone_number_confirmed");
 
                     b.Property<string>("SecurityStamp")
@@ -357,15 +358,19 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<Guid>("BuyerId")
+                    b.Property<Guid>("AdminId")
                         .HasColumnType("UUID")
-                        .HasColumnName("buyer_id");
+                        .HasColumnName("admin_id");
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
                         .HasColumnName("created_on")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("UUID")
+                        .HasColumnName("customer_id");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
@@ -379,10 +384,6 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("quantity");
 
-                    b.Property<Guid>("SallerId")
-                        .HasColumnType("UUID")
-                        .HasColumnName("saller_id");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("NUMERIC(18,2)")
                         .HasColumnName("total_price");
@@ -390,11 +391,11 @@ namespace RO.DevTest.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_sale_id");
 
-                    b.HasIndex("BuyerId");
+                    b.HasIndex("AdminId");
+
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("SallerId");
 
                     b.ToTable("sale", (string)null);
                 });
@@ -464,12 +465,19 @@ namespace RO.DevTest.Persistence.Migrations
 
             modelBuilder.Entity("RO.DevTest.Domain.Entities.Sale", b =>
                 {
-                    b.HasOne("RO.DevTest.Domain.Entities.Identity.User", "Buyer")
+                    b.HasOne("RO.DevTest.Domain.Entities.Identity.User", "Admin")
                         .WithMany()
-                        .HasForeignKey("BuyerId")
+                        .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_sales_buyer");
+                        .HasConstraintName("fk_sales_admin");
+
+                    b.HasOne("RO.DevTest.Domain.Entities.Identity.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_sales_customer");
 
                     b.HasOne("RO.DevTest.Domain.Entities.Product", "Product")
                         .WithMany()
@@ -478,18 +486,11 @@ namespace RO.DevTest.Persistence.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_sales_product");
 
-                    b.HasOne("RO.DevTest.Domain.Entities.Identity.User", "Saller")
-                        .WithMany()
-                        .HasForeignKey("SallerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_sales_saller");
+                    b.Navigation("Admin");
 
-                    b.Navigation("Buyer");
+                    b.Navigation("Customer");
 
                     b.Navigation("Product");
-
-                    b.Navigation("Saller");
                 });
 #pragma warning restore 612, 618
         }

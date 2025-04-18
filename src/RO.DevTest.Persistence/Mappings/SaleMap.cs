@@ -23,17 +23,17 @@ public class SaleMap : IEntityTypeConfiguration<Sale>
 
         // Saller
         builder
-            .Property(s => s.SallerId)
+            .Property(s => s.AdminId)
             .HasColumnType("UUID")
-            .HasColumnName("saller_id")
+            .HasColumnName("admin_id")
             .IsRequired();
 
         builder
-            .HasOne(s => s.Saller)
+            .HasOne(s => s.Admin)
             .WithMany()
-            .HasForeignKey(s => s.SallerId)
+            .HasForeignKey(s => s.AdminId)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("fk_sales_saller");
+            .HasConstraintName("fk_sales_admin");
 
         // Product
         builder
@@ -51,17 +51,17 @@ public class SaleMap : IEntityTypeConfiguration<Sale>
 
         // Buyer
         builder
-            .Property(s => s.BuyerId)
+            .Property(s => s.CustomerId)
             .HasColumnType("UUID")
-            .HasColumnName("buyer_id")
+            .HasColumnName("customer_id")
             .IsRequired();
 
         builder
-            .HasOne(s => s.Buyer)
+            .HasOne(s => s.Customer)
             .WithMany()
-            .HasForeignKey(s => s.BuyerId)
+            .HasForeignKey(s => s.CustomerId)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("fk_sales_buyer");
+            .HasConstraintName("fk_sales_customer");
 
         // Others
         builder

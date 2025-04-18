@@ -7,15 +7,14 @@ public static class AppExtension
         app.UseSecurity();
         app.UseDevelopmentEnvironment();
         app.MapControllers();
-        app.Run();
     }
     
     private static void UseDevelopmentEnvironment(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseOpenApi();
+            app.UseSwaggerUi();
         }
 
     }
