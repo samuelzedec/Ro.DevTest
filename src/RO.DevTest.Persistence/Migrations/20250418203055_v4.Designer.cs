@@ -12,8 +12,8 @@ using RO.DevTest.Persistence;
 namespace RO.DevTest.Persistence.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250418041153_v3")]
-    partial class v3
+    [Migration("20250418203055_v4")]
+    partial class v4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -289,7 +289,7 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("TIMESTAMP")
+                        .HasColumnType("TIMESTAMP WITH TIME ZONE")
                         .HasColumnName("expires_at");
 
                     b.Property<string>("Value")

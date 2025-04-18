@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RO.DevTest.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class v3 : Migration
+    public partial class v4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -148,7 +148,7 @@ namespace RO.DevTest.Persistence.Migrations
                     user_id = table.Column<Guid>(type: "UUID", nullable: false),
                     login_provider = table.Column<string>(type: "VARCHAR", maxLength: 255, nullable: false),
                     name = table.Column<string>(type: "VARCHAR", maxLength: 255, nullable: false),
-                    expires_at = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
+                    expires_at = table.Column<DateTime>(type: "TIMESTAMP WITH TIME ZONE", nullable: false),
                     value = table.Column<string>(type: "VARCHAR", maxLength: 755, nullable: false)
                 },
                 constraints: table =>

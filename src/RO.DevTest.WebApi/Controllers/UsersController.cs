@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
+using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Enums;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -16,8 +17,9 @@ public class UsersController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Route("admin")]
     [ActionName("CreateUserAdmin")]
-    [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateUserAdmin(
         [FromBody] CreateUserCommand request,
         CancellationToken cancellationToken)
@@ -33,8 +35,9 @@ public class UsersController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Route("customer")]
     [ActionName("CreateUserCustomer")]
-    [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateUserCustomer(
         [FromBody] CreateUserCommand request,
         CancellationToken cancellationToken)

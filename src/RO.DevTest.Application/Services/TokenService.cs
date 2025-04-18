@@ -2,17 +2,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using RO.DevTest.Application.Contracts.Infrastructure;
+using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Application.Settings;
 using RO.DevTest.Domain.Entities.Identity;
 using RO.DevTest.Domain.Services;
 
 namespace RO.DevTest.Application.Services;
 
-public class TokenService(IOptions<JwtSettings> jwtSettings) 
+public class TokenService(IOptions<JwtSettings> jwtSettings, IUserTokenRepository repository) 
     : ITokenService
 {
-    public string GenerateToken(User user)
+    public string GenerateAccessToken(User user)
     {
         List<Claim> claims = [
             new(ClaimTypes.NameIdentifier, user.UserName!),
@@ -37,6 +37,39 @@ public class TokenService(IOptions<JwtSettings> jwtSettings)
             tokenHandler.CreateToken(tokenDescriptor));
     }
 
-    public string GenerateRefreshToken()
-        => Guid.NewGuid().ToString();
+    public async Task<bool> ValidationRefreshTokenAsync(User user)
+    {
+        var refreshToken = await repository.GetRefreshTokenByUserIdAsync(user.Id);
+        if (refreshToken?.ExpiresAt < DateTime.UtcNow)
+            return false;
+
+        return true;
+    }
+
+    public async Task<string> CreateRefreshTokenAsync(User user)
+    {
+        var refreshTokenExisting = await repository.GetRefreshTokenByUserIdAsync(user.Id);
+        var token = Guid.NewGuid().ToString();
+        
+        if (refreshTokenExisting is not null)
+        {
+            refreshTokenExisting.ExpiresAt = DateTime.UtcNow.AddDays(7);
+            refreshTokenExisting.Value = token;
+            await repository.UpdateRefreshTokenAsync(refreshTokenExisting);
+        }
+        else
+        {
+            var newRefreshToken = new UserToken
+            {
+                UserId = user.Id,
+                LoginProvider = "ITokenService",
+                Name = "RefreshToken",
+                Value = token,
+                ExpiresAt = DateTime.UtcNow.AddDays(7)
+            };
+            await repository.CreateRefreshTokenAsync(newRefreshToken);
+        }
+
+        return token;
+    }
 }

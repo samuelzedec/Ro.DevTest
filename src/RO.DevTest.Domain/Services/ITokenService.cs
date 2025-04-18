@@ -4,6 +4,7 @@ namespace RO.DevTest.Domain.Services;
 
 public interface ITokenService
 {
-    string GenerateToken(User user);
-    string GenerateRefreshToken();
+    string GenerateAccessToken(User user);
+    Task<bool> ValidationRefreshTokenAsync(User user);
+    Task<string> CreateRefreshTokenAsync(User user);
 }

@@ -21,6 +21,9 @@ public class IdentityAbstractor(
 
     public async Task<User?> FindUserByEmailAsync(string email) 
         => await userManager.FindByEmailAsync(email);
+    
+    public async Task<User?> FindUserByNameAsync(string userName) 
+        => await userManager.FindByNameAsync(userName);
 
     public async Task<User?> FindUserByIdAsync(string userId) 
         => await userManager.FindByIdAsync(userId);

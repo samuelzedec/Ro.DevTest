@@ -286,7 +286,7 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnName("name");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("TIMESTAMP")
+                        .HasColumnType("TIMESTAMP WITH TIME ZONE")
                         .HasColumnName("expires_at");
 
                     b.Property<string>("Value")

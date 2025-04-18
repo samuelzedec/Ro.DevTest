@@ -1,8 +1,11 @@
 ﻿using FluentValidation;
 
 namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
-public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>{
-    public CreateUserCommandValidator() {
+
+public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+{
+    public CreateUserCommandValidator()
+    {
         RuleFor(cpau => cpau.Email)
             .NotNull()
             .NotEmpty()
