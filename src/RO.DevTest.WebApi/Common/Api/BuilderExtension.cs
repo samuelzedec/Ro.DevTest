@@ -52,7 +52,13 @@ public static class BuilderExtension
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        
+        builder.Services.AddOpenApiDocument(document =>
+        {
+            document.Title = "RO.DevTest API";
+            document.Version = "v1";
+            document.Description = "API for RO.DevTest application";
+        });
     }
     
     private static void AddSecurity(this WebApplicationBuilder builder)

@@ -6,16 +6,25 @@ using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 
 namespace RO.DevTest.WebApi.Controllers;
 
-[Route("api/user")]
+[ApiController]
+[Route("api/v1/users")]
 [OpenApiTags("Users")]
-public class UsersController(IMediator mediator) : Controller {
-    private readonly IMediator _mediator = mediator;
-
+[ApiExplorerSettings(GroupName = "Users")]
+public class UsersController(IMediator mediator) : ControllerBase
+{
     [HttpPost]
+    [Route("admin")]
+    [ActionName("CreateUserAdmin")]
     [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateUser(CreateUserCommand request) {
-        CreateUserResult response = await _mediator.Send(request);
+    public async Task<IActionResult> CreateUserAdmin(
+        [FromBody] CreateUserCommand request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
+        if (response.StatusCode is StatusCodes.Status400BadRequest)
+            return BadRequest(response);
+            
         return Created(HttpContext.Request.GetDisplayUrl(), response);
     }
 }

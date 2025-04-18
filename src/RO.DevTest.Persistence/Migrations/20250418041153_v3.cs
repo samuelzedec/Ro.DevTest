@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RO.DevTest.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class v2 : Migration
+    public partial class v3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,8 +43,8 @@ namespace RO.DevTest.Persistence.Migrations
                     password_hash = table.Column<string>(type: "VARCHAR", maxLength: 255, nullable: false),
                     security_stamp = table.Column<string>(type: "VARCHAR", maxLength: 36, nullable: true),
                     concurrency_stamp = table.Column<string>(type: "VARCHAR", maxLength: 36, nullable: true),
-                    phone_number = table.Column<string>(type: "VARCHAR", maxLength: 15, nullable: false),
-                    phone_number_confirmed = table.Column<bool>(type: "BOOLEAN", nullable: false),
+                    phone_number = table.Column<string>(type: "VARCHAR", maxLength: 15, nullable: true),
+                    phone_number_confirmed = table.Column<bool>(type: "BOOLEAN", nullable: false, defaultValue: false),
                     two_factor_enabled = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     lockout_end = table.Column<DateTimeOffset>(type: "TIMESTAMP WITH TIME ZONE", nullable: true),
                     lockout_enabled = table.Column<bool>(type: "BOOLEAN", nullable: false),
@@ -191,9 +191,9 @@ namespace RO.DevTest.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "UUID", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    saller_id = table.Column<Guid>(type: "UUID", nullable: false),
+                    admin_id = table.Column<Guid>(type: "UUID", nullable: false),
                     product_id = table.Column<Guid>(type: "UUID", nullable: false),
-                    buyer_id = table.Column<Guid>(type: "UUID", nullable: false),
+                    customer_id = table.Column<Guid>(type: "UUID", nullable: false),
                     quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     total_price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     created_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
@@ -203,8 +203,14 @@ namespace RO.DevTest.Persistence.Migrations
                 {
                     table.PrimaryKey("pk_sale_id", x => x.id);
                     table.ForeignKey(
-                        name: "fk_sales_buyer",
-                        column: x => x.buyer_id,
+                        name: "fk_sales_admin",
+                        column: x => x.admin_id,
+                        principalTable: "aspnet_user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "fk_sales_customer",
+                        column: x => x.customer_id,
                         principalTable: "aspnet_user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -214,12 +220,6 @@ namespace RO.DevTest.Persistence.Migrations
                         principalTable: "product",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_sales_saller",
-                        column: x => x.saller_id,
-                        principalTable: "aspnet_user",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -266,19 +266,19 @@ namespace RO.DevTest.Persistence.Migrations
                 column: "SallerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_sale_buyer_id",
+                name: "IX_sale_admin_id",
                 table: "sale",
-                column: "buyer_id");
+                column: "admin_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_sale_customer_id",
+                table: "sale",
+                column: "customer_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_sale_product_id",
                 table: "sale",
                 column: "product_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_sale_saller_id",
-                table: "sale",
-                column: "saller_id");
         }
 
         /// <inheritdoc />

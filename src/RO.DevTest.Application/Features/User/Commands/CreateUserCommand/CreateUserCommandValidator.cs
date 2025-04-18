@@ -13,8 +13,8 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>{
             .WithMessage("O campo e-mail precisa ser um e-mail válido");
 
         RuleFor(cpau => cpau.Password)
-            .MinimumLength(6)
-            .WithMessage("O campo senha precisa ter, pelo menos, 6 caracteres");
+            .MinimumLength(8)
+            .WithMessage("O campo senha precisa ter, pelo menos, 8 caracteres");
 
         RuleFor(cpau => cpau.PasswordConfirmation)
             .Matches(cpau => cpau.Password)

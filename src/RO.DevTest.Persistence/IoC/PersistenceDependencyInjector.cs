@@ -28,6 +28,6 @@ public static class PersistenceDependencyInjector
         });
 
         services.AddTransient<IUserRepository, UserRepository>();
-        
+        services.AddTransient<IProductRepository, ProductRepository>();
     }
 }

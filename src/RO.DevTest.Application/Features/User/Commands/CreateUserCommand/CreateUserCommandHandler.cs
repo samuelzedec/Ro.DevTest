@@ -1,36 +1,50 @@
-﻿using FluentValidation.Results;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
+using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Entities.Identity;
-using RO.DevTest.Domain.Exception;
 
 namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 
 /// <summary>
 /// Command handler for the creation of <see cref="User"/>
 /// </summary>
-public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor) : IRequestHandler<CreateUserCommand, CreateUserResult> {
+public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor, ILogger<CreateUserCommandHandler> logger)
+    : IRequestHandler<CreateUserCommand, Result<CreateUserResult>>
+{
+    public async Task<Result<CreateUserResult>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var validator = new CreateUserCommandValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return Result<CreateUserResult>.Failure(messages:
+                    validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
+            }
 
-    public async Task<CreateUserResult> Handle(CreateUserCommand request, CancellationToken cancellationToken) {
-        CreateUserCommandValidator validator = new();
-        ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
+            Domain.Entities.Identity.User newUser = request.AssignTo();
+            var userCreationResult = await identityAbstractor.CreateUserAsync(newUser, request.Password);
+            if (!userCreationResult.Succeeded)
+            {
+                return Result<CreateUserResult>.Failure(messages:
+                    userCreationResult.Errors.Select(e => e.Description).ToArray());
+            }
 
-        if(!validationResult.IsValid) {
-            throw new BadRequestException(validationResult);
+            var userRoleResult = await identityAbstractor.AddToRoleAsync(newUser, request.Role);
+            if (!userCreationResult.Succeeded)
+            {
+                return Result<CreateUserResult>.Failure(messages:
+                    userRoleResult.Errors.Select(e => e.Description).ToArray());
+            }
+            
+            return Result<CreateUserResult>.Success(new CreateUserResult(newUser), 201);
         }
-
-        Domain.Entities.Identity.User newUser = request.AssignTo();
-        IdentityResult userCreationResult = await identityAbstractor.CreateUserAsync(newUser, request.Password);
-        if(!userCreationResult.Succeeded) {
-            throw new BadRequestException(userCreationResult);
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message);
+            return Result<CreateUserResult>.Failure(messages: ex.Message);
         }
-
-        IdentityResult userRoleResult = await identityAbstractor.AddToRoleAsync(newUser, request.Role);
-        if(!userRoleResult.Succeeded) {
-            throw new BadRequestException(userRoleResult);
-        }
-
-        return new CreateUserResult(newUser);
     }
 }

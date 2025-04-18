@@ -79,13 +79,13 @@ public class UserMap : IEntityTypeConfiguration<User>
             .HasColumnType("VARCHAR")
             .HasColumnName("phone_number")
             .HasMaxLength(15)
-            .IsRequired();
+            .IsRequired(false);
 
         builder
             .Property(u => u.PhoneNumberConfirmed)
             .HasColumnType("BOOLEAN")
             .HasColumnName("phone_number_confirmed")
-            .IsRequired();
+            .HasDefaultValue(false);
         
         builder
             .Property(u => u.ConcurrencyStamp)
