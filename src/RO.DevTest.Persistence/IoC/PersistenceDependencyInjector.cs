@@ -27,7 +27,7 @@ public static class PersistenceDependencyInjector
                 b => b.MigrationsAssembly("RO.DevTest.Persistence"));
         });
 
-        services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<IProductRepository, ProductRepository>();
+        services.AddTransient<ISaleRepository, SaleRepository>();
     }
 }

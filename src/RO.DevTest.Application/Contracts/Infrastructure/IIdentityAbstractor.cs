@@ -80,6 +80,8 @@ public interface IIdentityAbstractor {
     /// </returns>
     Task<IdentityResult> CreateUserAsync(User user, string password);
 
+    Task<IdentityResult> UpdateUserAsync(User user);
+
     /// <summary>
     /// Adds a <see cref="User"/> to a <see cref="IdentityRole"/>
     /// asynchronously. If the role doesn't exist, it will be created.
