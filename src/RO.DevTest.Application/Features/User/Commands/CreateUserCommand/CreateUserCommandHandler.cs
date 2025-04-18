@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Entities.Identity;
+using RO.DevTest.Domain.Enums;
 
 namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 
@@ -33,13 +34,15 @@ public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor, IL
             }
 
             var userRoleResult = await identityAbstractor.AddToRoleAsync(newUser, request.Role);
-            if (!userCreationResult.Succeeded)
+            if (!userRoleResult.Succeeded)
             {
                 return Result<CreateUserResult>.Failure(messages:
                     userRoleResult.Errors.Select(e => e.Description).ToArray());
             }
-            
-            return Result<CreateUserResult>.Success(new CreateUserResult(newUser), 201);
+
+            var role = await identityAbstractor.GetUserRolesAsync(newUser);
+            return Result<CreateUserResult>.Success(
+                new CreateUserResult(newUser, role.ToList().FirstOrDefault()!), 201);
         }
         catch (Exception ex)
         {
