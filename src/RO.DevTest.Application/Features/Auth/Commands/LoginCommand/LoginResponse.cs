@@ -16,8 +16,6 @@ public record LoginResponse
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Role { get; set; } = null;
     
-    public LoginResponse(){}
-    
     public LoginResponse(string? accessToken, string? refreshToken, DateTime expirationDate, string? role)
     {
         AccessToken = accessToken;

@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
+using RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Enums;
 
@@ -28,6 +30,9 @@ public class UsersController(IMediator mediator) : ControllerBase
         var response = await mediator.Send(request, cancellationToken);
         if (response.StatusCode is StatusCodes.Status400BadRequest)
             return BadRequest(response);
+        
+        if (response.StatusCode is StatusCodes.Status500InternalServerError)
+            return StatusCode(response.StatusCode, response);
             
         return Created(HttpContext.Request.GetDisplayUrl(), response);
     }
@@ -46,7 +51,25 @@ public class UsersController(IMediator mediator) : ControllerBase
         var response = await mediator.Send(request, cancellationToken);
         if (response.StatusCode is StatusCodes.Status400BadRequest)
             return BadRequest(response);
+        
+        if (response.StatusCode is StatusCodes.Status500InternalServerError)
+            return StatusCode(response.StatusCode, response);
             
         return Created(HttpContext.Request.GetDisplayUrl(), response);
+    }
+
+    [HttpPut]
+    [Authorize]
+    [Route("")]
+    [ActionName("UpdateUser")]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateUser(
+        [FromBody] UpdateUserCommand request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
     }
 }
