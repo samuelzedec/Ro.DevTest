@@ -3,16 +3,26 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.Auth.Commands.LoginCommand;
+using RO.DevTest.Application.Features.Auth.Commands.RefreshTokenCommand;
 using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.WebApi.Controllers;
 
 [ApiController]
-[Route("api/v1/auths")]
-[OpenApiTags("Auths")]
-[ApiExplorerSettings(GroupName = "Auths")]
+[Route("api/v1/auth")]
+[OpenApiTags("Auth")]
+[ApiExplorerSettings(GroupName = "Auth")]
 public class AuthController(IMediator mediator) : ControllerBase
 {
+    [HttpGet]
+    [Authorize]
+    [Route("")]
+    [ActionName("ValidatingAccessToken")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult Authenticate()
+        => Ok(Result<dynamic>.Success(null, messages: "Authenticated"));
+    
     [HttpPost]
     [Route("")]
     [ActionName("LoginAsync")]
@@ -27,12 +37,17 @@ public class AuthController(IMediator mediator) : ControllerBase
         return StatusCode(response.StatusCode, response);
     }
 
-    [HttpGet]
-    [Authorize]
-    [Route("")]
-    [ActionName("ValidatingAccessToken")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public IActionResult Authenticate()
-        => Ok(Result<dynamic>.Success(null, messages: "Authenticated"));
+    [HttpPost]
+    [Route("refresh-token")]
+    [ActionName("VerifyRefreshToken")]
+    [ProducesResponseType(typeof(Result<RefreshTokenResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<RefreshTokenResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<RefreshTokenResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> VerifyRefreshToken(
+        [FromBody] RefreshTokenCommand request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
 }
