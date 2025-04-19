@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
@@ -10,14 +11,16 @@ namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 /// <summary>
 /// Command handler for the creation of <see cref="User"/>
 /// </summary>
-public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor, ILogger<CreateUserCommandHandler> logger)
+public class CreateUserCommandHandler(
+    IIdentityAbstractor identityAbstractor, 
+    IValidator<CreateUserCommand> validator,
+    ILogger<CreateUserCommandHandler> logger)
     : IRequestHandler<CreateUserCommand, Result<CreateUserResult>>
 {
     public async Task<Result<CreateUserResult>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var validator = new CreateUserCommandValidator();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {

@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -6,14 +7,16 @@ using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
 
-public class UpdateUserCommandHandler(IIdentityAbstractor identityAbstractor, ILogger<UpdateUserCommandHandler> logger)
+public class UpdateUserCommandHandler(
+    IIdentityAbstractor identityAbstractor, 
+    IValidator<UpdateUserCommand> validator,
+    ILogger<UpdateUserCommandHandler> logger)
     : IRequestHandler<UpdateUserCommand, Result<UpdateUserResponse>>
 {
     public async Task<Result<UpdateUserResponse>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var validator = new UpdateUserCommandValidator();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {

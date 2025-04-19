@@ -309,6 +309,13 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<Guid>("AdminId")
+                        .HasColumnType("UUID");
+
+                    b.Property<int>("AvailableQuantity")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("available_quantity");
+
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
@@ -329,23 +336,18 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("VARCHAR(255)")
                         .HasColumnName("name");
 
-                    b.Property<decimal>("Price")
+                    b.Property<short>("ProductCategory")
+                        .HasColumnType("SMALLINT")
+                        .HasColumnName("product_category");
+
+                    b.Property<decimal>("UnitPrice")
                         .HasColumnType("NUMERIC(18,2)")
-                        .HasColumnName("price");
-
-                    b.Property<int>("Quantity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("quantity")
-                        .HasDefaultValueSql("0");
-
-                    b.Property<Guid>("SallerId")
-                        .HasColumnType("UUID");
+                        .HasColumnName("unit_price");
 
                     b.HasKey("Id")
                         .HasName("pk_product_id");
 
-                    b.HasIndex("SallerId");
+                    b.HasIndex("AdminId");
 
                     b.ToTable("product", (string)null);
                 });
@@ -376,6 +378,10 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
                         .HasColumnName("modified_on");
 
+                    b.Property<short>("PaymentMethod")
+                        .HasColumnType("SMALLINT")
+                        .HasColumnName("payment_method");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("UUID")
                         .HasColumnName("product_id");
@@ -384,9 +390,12 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("quantity");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("NUMERIC(18,2)")
-                        .HasColumnName("total_price");
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
+                        .HasColumnName("transaction_date");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id")
                         .HasName("pk_sale_id");
@@ -453,14 +462,14 @@ namespace RO.DevTest.Persistence.Migrations
 
             modelBuilder.Entity("RO.DevTest.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("RO.DevTest.Domain.Entities.Identity.User", "Saller")
+                    b.HasOne("RO.DevTest.Domain.Entities.Identity.User", "Admin")
                         .WithMany()
-                        .HasForeignKey("SallerId")
+                        .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_sale_saller");
+                        .HasConstraintName("fk_sale_admin");
 
-                    b.Navigation("Saller");
+                    b.Navigation("Admin");
                 });
 
             modelBuilder.Entity("RO.DevTest.Domain.Entities.Sale", b =>

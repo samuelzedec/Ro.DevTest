@@ -7,7 +7,6 @@ public class GetUserByNameOrEmailQueryValidator : AbstractValidator<GetUserByNam
     public GetUserByNameOrEmailQueryValidator()
     {
         RuleFor(u => u.NameOrEmail)
-            .NotNull()
             .NotEmpty()
             .WithMessage("O campo Nome/Email é obrigatório");
     }

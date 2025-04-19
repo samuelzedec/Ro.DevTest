@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -6,15 +7,17 @@ using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmail;
 
-public class GetUserByNameOrEmailQueryHandler(IIdentityAbstractor identityAbstractor, ILogger<GetUserByNameOrEmailQueryHandler> logger)
+public class GetUserByNameOrEmailQueryHandler(
+    IIdentityAbstractor identityAbstractor, 
+    IValidator<GetUserByNameOrEmailQuery> validator,
+    ILogger<GetUserByNameOrEmailQueryHandler> logger)
     : IRequestHandler<GetUserByNameOrEmailQuery, Result<GetUserByNameOrEmailResponse>>
 {
     public async Task<Result<GetUserByNameOrEmailResponse>> Handle(GetUserByNameOrEmailQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var validtor = new GetUserByNameOrEmailQueryValidator();
-            var validationResult = await validtor.ValidateAsync(request, cancellationToken);
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
                 return Result<GetUserByNameOrEmailResponse>.Failure(messages:

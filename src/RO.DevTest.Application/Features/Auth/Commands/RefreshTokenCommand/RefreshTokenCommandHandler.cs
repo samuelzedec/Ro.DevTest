@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ namespace RO.DevTest.Application.Features.Auth.Commands.RefreshTokenCommand;
 public class RefreshTokenCommandHandler(
     IIdentityAbstractor identityAbstractor,
     ITokenService tokenService,
+    IValidator<RefreshTokenCommand> validator,
     ILogger<RefreshTokenCommandHandler> logger)
     : IRequestHandler<RefreshTokenCommand, Result<RefreshTokenResponse>>
 {
@@ -19,7 +21,6 @@ public class RefreshTokenCommandHandler(
     {
         try
         {
-            var validator = new RefreshTokenCommandValidator();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
