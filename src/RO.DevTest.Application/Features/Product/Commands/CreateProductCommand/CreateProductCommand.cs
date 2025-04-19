@@ -1,16 +1,15 @@
+using MediatR;
 using RO.DevTest.Domain.Abstract;
-using RO.DevTest.Domain.Entities.Identity;
 using RO.DevTest.Domain.Enums;
 
-namespace RO.DevTest.Domain.Entities;
+namespace RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 
-public class Product : BaseEntity
+public class CreateProductCommand : IRequest<Result<CreateProductResponse>>
 {
+    public Guid AdminId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public decimal UnitPrice { get; set; }
     public int AvailableQuantity { get; set; }
     public ProductCategory ProductCategory { get; set; }
-    public Guid AdminId { get; set; }
-    public User? Admin { get; set; }
 }

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RO.DevTest.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class v4 : Migration
+    public partial class v5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -169,9 +169,10 @@ namespace RO.DevTest.Persistence.Migrations
                     id = table.Column<Guid>(type: "UUID", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     name = table.Column<string>(type: "VARCHAR(255)", nullable: false),
                     description = table.Column<string>(type: "VARCHAR(455)", nullable: false),
-                    price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    quantity = table.Column<int>(type: "INTEGER", nullable: false, defaultValueSql: "0"),
-                    SallerId = table.Column<Guid>(type: "UUID", nullable: false),
+                    unit_price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    available_quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    product_category = table.Column<short>(type: "SMALLINT", nullable: false),
+                    AdminId = table.Column<Guid>(type: "UUID", nullable: false),
                     created_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     modified_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true)
                 },
@@ -179,8 +180,8 @@ namespace RO.DevTest.Persistence.Migrations
                 {
                     table.PrimaryKey("pk_product_id", x => x.id);
                     table.ForeignKey(
-                        name: "fk_sale_saller",
-                        column: x => x.SallerId,
+                        name: "fk_sale_admin",
+                        column: x => x.AdminId,
                         principalTable: "aspnet_user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -194,8 +195,10 @@ namespace RO.DevTest.Persistence.Migrations
                     admin_id = table.Column<Guid>(type: "UUID", nullable: false),
                     product_id = table.Column<Guid>(type: "UUID", nullable: false),
                     customer_id = table.Column<Guid>(type: "UUID", nullable: false),
+                    transaction_date = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: false),
+                    payment_method = table.Column<short>(type: "SMALLINT", nullable: false),
                     quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    total_price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "numeric", nullable: false),
                     created_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     modified_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true)
                 },
@@ -261,9 +264,9 @@ namespace RO.DevTest.Persistence.Migrations
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_product_SallerId",
+                name: "IX_product_AdminId",
                 table: "product",
-                column: "SallerId");
+                column: "AdminId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_sale_admin_id",

@@ -34,24 +34,29 @@ public class ProductMap : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder
-            .Property(p => p.Price)
+            .Property(p => p.UnitPrice)
             .HasColumnType("NUMERIC(18,2)")
-            .HasColumnName("price")
+            .HasColumnName("unit_price")
             .IsRequired();
 
         builder
-            .Property(p => p.Quantity)
+            .Property(p => p.AvailableQuantity)
             .HasColumnType("INTEGER")
-            .HasColumnName("quantity")
-            .IsRequired()
-            .HasDefaultValueSql("0");
+            .HasColumnName("available_quantity")
+            .IsRequired();
 
         builder
-            .HasOne(p => p.Saller)
+            .Property(p => p.ProductCategory)
+            .HasColumnType("SMALLINT")
+            .HasColumnName("product_category")
+            .IsRequired();
+
+        builder
+            .HasOne(p => p.Admin)
             .WithMany()
-            .HasForeignKey(s => s.SallerId)
+            .HasForeignKey(s => s.AdminId)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("fk_sale_saller")
+            .HasConstraintName("fk_sale_admin")
             .IsRequired();
 
         builder
