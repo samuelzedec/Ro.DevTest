@@ -40,7 +40,7 @@ public class TokenService(IOptions<JwtSettings> jwtSettings, IUserTokenRepositor
     public async Task<bool> ValidationRefreshTokenAsync(User user)
     {
         var refreshToken = await repository.GetRefreshTokenByUserIdAsync(user.Id);
-        if (refreshToken?.ExpiresAt < DateTime.UtcNow)
+        if (refreshToken?.ExpiresAt <= DateTime.UtcNow)
             return false;
 
         return true;
