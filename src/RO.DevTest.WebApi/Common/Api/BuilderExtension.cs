@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using RO.DevTest.Application;
 using RO.DevTest.Application.Services;
@@ -58,6 +59,11 @@ public static class BuilderExtension
             document.Title = "RO.DevTest API";
             document.Version = "v1";
             document.Description = "API for RO.DevTest application";
+        });
+        
+        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
         });
     }
     

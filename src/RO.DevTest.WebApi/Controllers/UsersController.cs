@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 using RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
+using RO.DevTest.Application.Features.User.Queries.GetUserById;
+using RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmail;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Enums;
 
@@ -69,6 +71,38 @@ public class UsersController(IMediator mediator) : ControllerBase
         [FromBody] UpdateUserCommand request,
         CancellationToken cancellationToken)
     {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet]
+    [Authorize]
+    [Route("{id:guid}")]
+    [ActionName("GetUserById")]
+    [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetUserById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken)
+    {
+        var request = new GetUserByIdQuery(id);
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("")]
+    [ActionName("GetUserByNameOrId")]
+    [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetUserByNameOrEmail(
+        [FromQuery] string nameOrEmail,
+        CancellationToken cancellationToken)
+    {
+        var request = new GetUserByNameOrEmailQuery(nameOrEmail);
         var response = await mediator.Send(request, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
