@@ -9,9 +9,9 @@ using RO.DevTest.Domain.Abstract;
 namespace RO.DevTest.WebApi.Controllers;
 
 [ApiController]
-[Route("api/v1/auths")]
-[OpenApiTags("Auths")]
-[ApiExplorerSettings(GroupName = "Auths")]
+[Route("api/v1/auth")]
+[OpenApiTags("Auth")]
+[ApiExplorerSettings(GroupName = "Auth")]
 public class AuthController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
