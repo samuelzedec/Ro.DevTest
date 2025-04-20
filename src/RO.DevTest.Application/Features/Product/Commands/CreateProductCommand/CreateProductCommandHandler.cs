@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
+using RO.DevTest.Application.Contracts.Infrastructure.Services;
 using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Domain.Abstract;
 
@@ -11,6 +12,7 @@ namespace RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 public class CreateProductCommandHandler(
     IIdentityAbstractor identityAbstractor,
     IProductRepository productRepository,
+    ICurrentUserService currentUserService,
     IValidator<CreateProductCommand> validator,
     ILogger<CreateProductCommandHandler> logger)
     : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
@@ -27,13 +29,13 @@ public class CreateProductCommandHandler(
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
 
-            var (userIsInvalid, errorMessage) = await EnsureUserIsAdminAsync(request.AdminId.ToString());
+            var (userIsInvalid, errorMessage) = await EnsureUserIsAdminAsync(currentUserService.GetCurrentUserId());
             if (userIsInvalid)
                 return Result<CreateProductResponse>.Failure(messages: errorMessage);
             
             var product = new Domain.Entities.Product
             {
-                AdminId = request.AdminId,
+                AdminId = Guid.Parse(currentUserService.GetCurrentUserId()),
                 Name = request.Name,
                 Description = request.Description,
                 UnitPrice = request.UnitPrice,
@@ -60,8 +62,7 @@ public class CreateProductCommandHandler(
         if (user is null)
             return (true, "User not found");
         
-        var role = await identityAbstractor.GetUserRolesAsync(user);
-        if (role.FirstOrDefault() == "Customer")
+        if (!currentUserService.IsAdmin())
             return (true, "Only administrators can create products");
 
         return (false, string.Empty);

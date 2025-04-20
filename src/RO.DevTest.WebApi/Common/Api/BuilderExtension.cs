@@ -6,10 +6,10 @@ using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using RO.DevTest.Application;
-using RO.DevTest.Application.Services;
+using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Application.Settings;
-using RO.DevTest.Domain.Services;
 using RO.DevTest.Infrastructure.IoC;
+using RO.DevTest.Infrastructure.Services;
 using RO.DevTest.Persistence.IoC;
 using Serilog;
 using Serilog.Events;
@@ -24,7 +24,6 @@ public static class BuilderExtension
         builder.AddSettings();
         builder.AddServices();
         builder.AddSecurity();
-        builder.AddInversionDependency();
     }
     
     private static void AddLogs(this WebApplicationBuilder builder)
@@ -56,6 +55,7 @@ public static class BuilderExtension
                 typeof(Program).Assembly
             ));
 
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddControllers();
         builder.Services.Configure<ApiBehaviorOptions>(options 
             => options.SuppressModelStateInvalidFilter = true);
@@ -120,10 +120,5 @@ public static class BuilderExtension
             };
         });
         builder.Services.AddAuthorization();
-    }
-    
-    private static void AddInversionDependency(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddTransient<ITokenService, TokenService>();
     }
 }

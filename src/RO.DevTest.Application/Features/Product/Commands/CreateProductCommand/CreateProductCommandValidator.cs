@@ -6,11 +6,6 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 {
     public CreateProductCommandValidator()
     {
-        RuleFor(p => p.AdminId)
-            .NotNull()
-            .NotEmpty()
-            .WithMessage("Id do admin obrigatório");
-            
         RuleFor(p => p.Name)
             .NotEmpty()
             .WithMessage("Nome do produto é obrigatório")

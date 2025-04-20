@@ -13,7 +13,7 @@ using RO.DevTest.Domain.Enums;
 namespace RO.DevTest.WebApi.Controllers;
 
 [ApiController]
-[Route("api/v1/users")]
+[Route("/v1/users")]
 [OpenApiTags("Users")]
 [ApiExplorerSettings(GroupName = "Users")]
 public class UsersController(IMediator mediator) : ControllerBase
@@ -21,9 +21,9 @@ public class UsersController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Route("admin")]
     [ActionName("CreateUserAdmin")]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateUserAdmin(
         [FromBody] CreateUserCommand request,
         CancellationToken cancellationToken)
@@ -42,9 +42,9 @@ public class UsersController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Route("customer")]
     [ActionName("CreateUserCustomer")]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateUserCustomer(
         [FromBody] CreateUserCommand request,
         CancellationToken cancellationToken)
@@ -64,9 +64,9 @@ public class UsersController(IMediator mediator) : ControllerBase
     [Authorize]
     [Route("")]
     [ActionName("UpdateUser")]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<CreateUserResult>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<CreateUserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUser(
         [FromBody] UpdateUserCommand request,
         CancellationToken cancellationToken)
@@ -77,29 +77,27 @@ public class UsersController(IMediator mediator) : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [Route("{id:guid}")]
+    [Route("")]
     [ActionName("GetUserById")]
     [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserById(
-        [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
-        var request = new GetUserByIdQuery(id);
-        var response = await mediator.Send(request, cancellationToken);
+        var response = await mediator.Send(new GetUserByIdQuery(), cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
     
     [HttpGet]
     [Authorize]
-    [Route("")]
+    [Route("{nameOrEmail}")]
     [ActionName("GetUserByNameOrId")]
     [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserByNameOrEmail(
-        [FromQuery] string nameOrEmail,
+        [FromRoute] string nameOrEmail,
         CancellationToken cancellationToken)
     {
         var request = new GetUserByNameOrEmailQuery(nameOrEmail);

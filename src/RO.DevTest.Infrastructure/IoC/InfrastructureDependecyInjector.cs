@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using RO.DevTest.Application.Contracts.Infrastructure;
-using RO.DevTest.Domain.Entities;
+using RO.DevTest.Application.Contracts.Infrastructure.Services;
 using RO.DevTest.Domain.Entities.Identity;
 using RO.DevTest.Infrastructure.Abstractions;
+using RO.DevTest.Infrastructure.Services;
 using RO.DevTest.Persistence;
 
 namespace RO.DevTest.Infrastructure.IoC;
@@ -26,7 +27,9 @@ public static class InfrastructureDependecyInjector {
             .AddDefaultTokenProviders();
 
         services.AddScoped<IIdentityAbstractor, IdentityAbstractor>();
-
+        services.AddTransient<ITokenService, TokenService>();
+        services.AddTransient<ICurrentUserService, CurrentUserService>();
+        
         return services;
     }
 }

@@ -1,6 +1,6 @@
 using RO.DevTest.Domain.Entities.Identity;
 
-namespace RO.DevTest.Domain.Services;
+namespace RO.DevTest.Application.Contracts.Infrastructure.Services;
 
 public interface ITokenService
 {
