@@ -21,7 +21,7 @@ public class SaleMap : IEntityTypeConfiguration<Sale>
             .ValueGeneratedOnAdd()
             .HasDefaultValueSql("gen_random_uuid()");
 
-        // Saller
+        // Admin
         builder
             .Property(s => s.AdminId)
             .HasColumnType("UUID")
@@ -49,7 +49,7 @@ public class SaleMap : IEntityTypeConfiguration<Sale>
             .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_sales_product");
 
-        // Buyer
+        // Customer
         builder
             .Property(s => s.CustomerId)
             .HasColumnType("UUID")
@@ -64,16 +64,23 @@ public class SaleMap : IEntityTypeConfiguration<Sale>
             .HasConstraintName("fk_sales_customer");
 
         // Others
+
+        builder
+            .Property(s => s.TransactionDate)
+            .HasColumnName("transaction_date")
+            .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
+            .IsRequired();
+
+        builder
+            .Property(s => s.PaymentMethod)
+            .HasColumnName("payment_method")
+            .HasColumnType("SMALLINT")
+            .IsRequired();
+        
         builder
             .Property(s => s.Quantity)
             .HasColumnName("quantity")
             .HasColumnType("INTEGER")
-            .IsRequired();
-
-        builder
-            .Property(s => s.TotalPrice)
-            .HasColumnName("total_price")
-            .HasColumnType("NUMERIC(18,2)")
             .IsRequired();
         
         builder

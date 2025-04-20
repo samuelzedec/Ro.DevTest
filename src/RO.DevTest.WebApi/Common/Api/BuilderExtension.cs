@@ -1,6 +1,10 @@
+using System.Text.Json.Serialization;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using RO.DevTest.Application;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Application.Settings;
@@ -43,6 +47,7 @@ public static class BuilderExtension
     {
         builder.Services.InjectPersistenceDependencies(builder.Configuration);
         builder.Services.InjectInfrastructureDependencies();
+        builder.Services.AddValidatorsFromAssembly(typeof(ApplicationLayer).Assembly);
         
         builder.Services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssemblies(
@@ -52,18 +57,30 @@ public static class BuilderExtension
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.Configure<ApiBehaviorOptions>(options 
+            => options.SuppressModelStateInvalidFilter = true);
+        builder.Services.Configure<JsonOptions>(options 
+            => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
         
+        builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddOpenApiDocument(document =>
         {
             document.Title = "RO.DevTest API";
             document.Version = "v1";
             document.Description = "API for RO.DevTest application";
-        });
-        
-        builder.Services.Configure<ApiBehaviorOptions>(options =>
-        {
-            options.SuppressModelStateInvalidFilter = true;
+            
+            document.AddSecurity("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "Insira o token JWT. Exemplo: \"Bearer {seu_token}\"",
+                Name = "Authorization",
+                In = OpenApiSecurityApiKeyLocation.Header,
+                Type = OpenApiSecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT"
+            });
+
+            document.OperationProcessors.Add(
+                new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
         });
     }
     

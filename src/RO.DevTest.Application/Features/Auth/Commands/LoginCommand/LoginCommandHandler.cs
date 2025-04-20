@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
@@ -10,6 +11,7 @@ namespace RO.DevTest.Application.Features.Auth.Commands.LoginCommand;
 public class LoginCommandHandler(
     IIdentityAbstractor identityAbstractor, 
     ITokenService tokenService,
+    IValidator<LoginCommand> validator,
     ILogger<LoginCommandHandler> logger)
     : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
@@ -19,7 +21,6 @@ public class LoginCommandHandler(
     {
         try
         {
-            var validator = new LoginCommandValidator();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
