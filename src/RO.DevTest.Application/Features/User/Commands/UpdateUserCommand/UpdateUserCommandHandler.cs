@@ -1,19 +1,24 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
+using RO.DevTest.Application.Contracts.Infrastructure.Services;
 using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
 
-public class UpdateUserCommandHandler(IIdentityAbstractor identityAbstractor, ILogger<UpdateUserCommandHandler> logger)
+public class UpdateUserCommandHandler(
+    IIdentityAbstractor identityAbstractor,
+    ICurrentUserService currentUserService,
+    IValidator<UpdateUserCommand> validator,
+    ILogger<UpdateUserCommandHandler> logger)
     : IRequestHandler<UpdateUserCommand, Result<UpdateUserResponse>>
 {
     public async Task<Result<UpdateUserResponse>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var validator = new UpdateUserCommandValidator();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
@@ -21,7 +26,7 @@ public class UpdateUserCommandHandler(IIdentityAbstractor identityAbstractor, IL
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
 
-            var user = await identityAbstractor.FindUserByIdAsync(request.Id.ToString());
+            var user = await identityAbstractor.FindUserByIdAsync(currentUserService.GetCurrentUserId());
             if (user is null)
                 return Result<UpdateUserResponse>.Failure(messages: "User not found");
 

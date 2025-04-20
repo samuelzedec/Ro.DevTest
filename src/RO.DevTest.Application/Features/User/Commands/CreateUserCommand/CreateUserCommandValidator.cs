@@ -6,21 +6,41 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
     public CreateUserCommandValidator()
     {
-        RuleFor(cpau => cpau.Email)
-            .NotNull()
+        RuleFor(u => u.Name)
             .NotEmpty()
-            .WithMessage("O campo e-mail precisa ser preenchido");
+            .WithMessage("O nome é obrigatório")
+            .MaximumLength(255)
+            .WithMessage("O nome deve ter no máximo 255 caracteres");
 
-        RuleFor(cpau => cpau.Email)
+        RuleFor(u => u.UserName)
+            .NotEmpty()
+            .WithMessage("O nome de usuário é obrigatório")
+            .MaximumLength(255)
+            .WithMessage("O nome de usuário deve ter no máximo 255 caracteres")
+            .Matches("^[a-z0-9]*$")
+            .WithMessage("O nome de usuário deve conter apenas letras minúsculas e números, sem espaços");
+
+        RuleFor(u => u.Email)
+            .NotEmpty()
+            .WithMessage("O campo e-mail é obrigatório")
             .EmailAddress()
-            .WithMessage("O campo e-mail precisa ser um e-mail válido");
+            .WithMessage("Formato de e-mail inválido")
+            .MaximumLength(255)
+            .WithMessage("O e-mail deve ter no máximo 255 caracteres");
 
-        RuleFor(cpau => cpau.Password)
+        RuleFor(u => u.Password)
+            .NotEmpty()
+            .WithMessage("A senha é obrigatória")
             .MinimumLength(8)
-            .WithMessage("O campo senha precisa ter, pelo menos, 8 caracteres");
+            .WithMessage("A senha deve ter pelo menos 8 caracteres")
+            .Matches("[A-Z]").WithMessage("A senha deve conter pelo menos uma letra maiúscula")
+            .Matches("[0-9]").WithMessage("A senha deve conter pelo menos um número")
+            .Matches("[^a-zA-Z0-9]").WithMessage("A senha deve conter pelo menos um caractere especial");
 
-        RuleFor(cpau => cpau.PasswordConfirmation)
-            .Matches(cpau => cpau.Password)
-            .WithMessage("O campo de confirmação de senha deve ser igual ao campo senha");
+        RuleFor(u => u.PasswordConfirmation)
+            .NotEmpty()
+            .WithMessage("A confirmação de senha é obrigatória")
+            .Equal(u => u.Password)
+            .WithMessage("As senhas não conferem");
     }
 }
