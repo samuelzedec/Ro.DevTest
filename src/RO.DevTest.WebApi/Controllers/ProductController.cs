@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 using RO.DevTest.Application.Features.Product.Commands.UpdateProductCommand;
+using RO.DevTest.Application.Features.Product.Queries.GetProductQuery;
 using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -36,7 +37,7 @@ public class ProductController(IMediator mediator) : ControllerBase
     [Authorize]
     [Route("")]
     [ActionName("UpdateProduct")]
-    [ProducesResponseType(typeof(Result<UpdateProductResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<UpdateProductResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<UpdateProductResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<UpdateProductResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateProduct(
@@ -44,6 +45,20 @@ public class ProductController(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet]
+    [Authorize]
+    [Route("{productId:guid}")]
+    [ProducesResponseType(typeof(Result<GetProductResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<GetProductResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<GetProductResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetProduct(
+        [FromRoute] Guid productId,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(new GetProductQuery() { ProductId = productId }, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
 }
