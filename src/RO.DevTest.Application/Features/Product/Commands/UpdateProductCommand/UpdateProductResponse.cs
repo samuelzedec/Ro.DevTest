@@ -1,8 +1,8 @@
 using RO.DevTest.Domain.Extensions;
 
-namespace RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
+namespace RO.DevTest.Application.Features.Product.Commands.UpdateProductCommand;
 
-public record CreateProductResponse
+public record UpdateProductResponse
 {
     public Guid Id { get; set; } 
     public string Name { get; set; } = string.Empty;
@@ -10,7 +10,7 @@ public record CreateProductResponse
     public Decimal UnitPrice { get; set; }
     public string Category { get; set; }
 
-    public CreateProductResponse(Domain.Entities.Product product)
+    public UpdateProductResponse(Domain.Entities.Product product)
     {
         Id = product.Id;
         Name = product.Name;
