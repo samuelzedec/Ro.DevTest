@@ -5,7 +5,7 @@ using RO.DevTest.Domain.Enums;
 
 namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 
-public class CreateUserCommand : IRequest<Result<CreateUserResult>> {
+public class CreateUserCommand : IRequest<Result<CreateUserResponse>> {
     public string UserName { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

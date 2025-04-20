@@ -9,7 +9,7 @@ using RO.DevTest.Domain.Abstract;
 namespace RO.DevTest.WebApi.Controllers;
 
 [ApiController]
-[Route("api/v1/products")]
+[Route("/v1/products")]
 [OpenApiTags("Products")]
 [ApiExplorerSettings(GroupName = "Products")]
 public class ProductController(IMediator mediator) : ControllerBase

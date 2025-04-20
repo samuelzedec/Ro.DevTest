@@ -15,16 +15,16 @@ public class CreateUserCommandHandler(
     IIdentityAbstractor identityAbstractor, 
     IValidator<CreateUserCommand> validator,
     ILogger<CreateUserCommandHandler> logger)
-    : IRequestHandler<CreateUserCommand, Result<CreateUserResult>>
+    : IRequestHandler<CreateUserCommand, Result<CreateUserResponse>>
 {
-    public async Task<Result<CreateUserResult>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CreateUserResponse>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         try
         {
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                return Result<CreateUserResult>.Failure(messages:
+                return Result<CreateUserResponse>.Failure(messages:
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
 
@@ -32,25 +32,25 @@ public class CreateUserCommandHandler(
             var userCreationResult = await identityAbstractor.CreateUserAsync(newUser, request.Password);
             if (!userCreationResult.Succeeded)
             {
-                return Result<CreateUserResult>.Failure(messages:
+                return Result<CreateUserResponse>.Failure(messages:
                     userCreationResult.Errors.Select(e => e.Description).ToArray());
             }
 
             var userRoleResult = await identityAbstractor.AddToRoleAsync(newUser, request.Role);
             if (!userRoleResult.Succeeded)
             {
-                return Result<CreateUserResult>.Failure(messages:
+                return Result<CreateUserResponse>.Failure(messages:
                     userRoleResult.Errors.Select(e => e.Description).ToArray());
             }
 
             var role = await identityAbstractor.GetUserRolesAsync(newUser);
-            return Result<CreateUserResult>.Success(
-                new CreateUserResult(newUser, role.ToList().FirstOrDefault()!), StatusCodes.Status201Created, "User created successfully");
+            return Result<CreateUserResponse>.Success(
+                new CreateUserResponse(newUser, role.ToList().FirstOrDefault()!), StatusCodes.Status201Created, "User created successfully");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<CreateUserResult>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<CreateUserResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 }

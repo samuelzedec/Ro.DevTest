@@ -6,10 +6,6 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 {
     public UpdateUserCommandValidator()
     {
-        RuleFor(u => u.Id)
-            .NotEmpty()
-            .WithMessage("O campo id é obrigatório");
-            
         When(u => !string.IsNullOrEmpty(u.UserName), () => {
             RuleFor(u => u.UserName)
                 .MaximumLength(255)

@@ -6,13 +6,13 @@ namespace RO.DevTest.Infrastructure.Services;
 
 public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
 {
-    public Guid GetCurrentGuidId()
+    public string GetCurrentUserId()
     {
         var userId = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userId))
             throw new UnauthorizedAccessException("Usuário não autenticado");
 
-        return Guid.Parse(userId);
+        return userId;
     }
 
     public bool IsAdmin()

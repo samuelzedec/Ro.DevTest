@@ -11,6 +11,7 @@ namespace RO.DevTest.Application.Features.Auth.Commands.LoginCommand;
 public class LoginCommandHandler(
     IIdentityAbstractor identityAbstractor, 
     ITokenService tokenService,
+    ICurrentUserService currentUserService,
     IValidator<LoginCommand> validator,
     ILogger<LoginCommandHandler> logger)
     : IRequestHandler<LoginCommand, Result<LoginResponse>>
@@ -38,7 +39,8 @@ public class LoginCommandHandler(
             if (!validationPassword.Succeeded)
                 return Result<LoginResponse>.Failure(messages: "Invalid email/username or password");
 
-            var role = await identityAbstractor.GetUserRolesAsync(user);
+            var role = currentUserService.IsAdmin() ? "Admin" : "Customer";
+            user.Roles.Add(role);
             var token = tokenService.GenerateAccessToken(user);
             var refreshToken = await tokenService.CreateRefreshTokenAsync(user);
 
@@ -46,7 +48,7 @@ public class LoginCommandHandler(
                 token,
                 refreshToken,
                 DateTime.UtcNow.AddMinutes(15),
-                role.ToList().FirstOrDefault());
+                role);
             
             return Result<LoginResponse>.Success(response, messages: "Login successfully");
         }
