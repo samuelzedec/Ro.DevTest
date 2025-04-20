@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using RO.DevTest.Application;
-using RO.DevTest.Application.Services;
+using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Application.Settings;
-using RO.DevTest.Domain.Services;
 using RO.DevTest.Infrastructure.IoC;
+using RO.DevTest.Infrastructure.Services;
 using RO.DevTest.Persistence.IoC;
 using Serilog;
 using Serilog.Events;
@@ -20,7 +20,6 @@ public static class BuilderExtension
         builder.AddSettings();
         builder.AddServices();
         builder.AddSecurity();
-        builder.AddInversionDependency();
     }
     
     private static void AddLogs(this WebApplicationBuilder builder)
@@ -51,6 +50,7 @@ public static class BuilderExtension
                 typeof(Program).Assembly
             ));
 
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         
@@ -103,10 +103,5 @@ public static class BuilderExtension
             };
         });
         builder.Services.AddAuthorization();
-    }
-    
-    private static void AddInversionDependency(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddTransient<ITokenService, TokenService>();
     }
 }

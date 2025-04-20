@@ -2,12 +2,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using RO.DevTest.Application.Contracts.Infrastructure;
+using RO.DevTest.Application.Contracts.Infrastructure.Services;
 using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Application.Settings;
 using RO.DevTest.Domain.Entities.Identity;
-using RO.DevTest.Domain.Services;
 
-namespace RO.DevTest.Application.Services;
+namespace RO.DevTest.Infrastructure.Services;
 
 public class TokenService(IOptions<JwtSettings> jwtSettings, IUserTokenRepository repository) 
     : ITokenService
@@ -15,9 +16,9 @@ public class TokenService(IOptions<JwtSettings> jwtSettings, IUserTokenRepositor
     public string GenerateAccessToken(User user)
     {
         List<Claim> claims = [
-            new(ClaimTypes.NameIdentifier, user.UserName!),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email!),
-            new(ClaimTypes.Name, user.Name)
+            new(ClaimTypes.Name, user.UserName!)
         ];
         claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
         

@@ -5,7 +5,7 @@ using RO.DevTest.Domain.Abstract;
 namespace RO.DevTest.WebApi.Controllers;
 
 [ApiController]
-[Route("/api")]
+[Route("/")]
 [OpenApiTags("Health System")]
 [ApiExplorerSettings(GroupName = "Monitoring and Diagnostics")]
 public class HomeController : ControllerBase
