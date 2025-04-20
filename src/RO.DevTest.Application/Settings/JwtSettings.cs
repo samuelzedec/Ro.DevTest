@@ -2,13 +2,12 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace RO.DevTest.Application.Settings;
 
-public class JwtSettings
+public record JwtSettings(
+    string KeyPath,
+    string KeyPassword,
+    string Issuer,
+    string Audience) 
 {
-    public required string KeyPath { get; set; }
-    public required string KeyPassword { get; set; }
-    public required string Issuer { get; set; }
-    public required string Audience { get; set; }
-
     /// <summary>
     /// Carrega um certificado PKCS#12 (.pfx/.p12) do sistema de arquivos,
     /// usa a senha para descriptografar seu conteúdo, e retorna um objeto X509Certificate2
@@ -22,7 +21,5 @@ public class JwtSettings
     /// </remarks>
     /// <returns>Certificado no formato válido para assinatura de tokens JWT</returns>
     public X509Certificate2 GenerateCertificate()
-        => new X509Certificate2(
-            KeyPath, KeyPassword,
-            X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
+        => new (KeyPath, KeyPassword, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
 }
