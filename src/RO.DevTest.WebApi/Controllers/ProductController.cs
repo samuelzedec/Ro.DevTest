@@ -58,7 +58,7 @@ public class ProductController(IMediator mediator) : ControllerBase
         [FromRoute] Guid productId,
         CancellationToken cancellationToken)
     {
-        var response = await mediator.Send(new GetProductQuery() { ProductId = productId }, cancellationToken);
+        var response = await mediator.Send(new GetProductQuery(productId), cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
 }
