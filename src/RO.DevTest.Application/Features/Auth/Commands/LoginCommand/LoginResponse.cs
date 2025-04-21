@@ -5,16 +5,16 @@ namespace RO.DevTest.Application.Features.Auth.Commands.LoginCommand;
 public record LoginResponse
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? AccessToken { get; set; }
+    public string? AccessToken { get; set; } = null;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? RefreshToken { get; init; }
+    public string? RefreshToken { get; set; } = null;
 
-    public DateTime IssuedAt { get; init; } = DateTime.UtcNow;
-    public DateTime ExpirationDate { get; init; }
+    public DateTime IssuedAt { get; set; } = DateTime.UtcNow;
+    public DateTime ExpirationDate { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Role { get; init; }
+    public string? Role { get; set; } = null;
     
     public LoginResponse(string? accessToken, string? refreshToken, DateTime expirationDate, string? role)
     {

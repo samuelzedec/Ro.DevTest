@@ -5,20 +5,19 @@ using RO.DevTest.Domain.Enums;
 
 namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 
-public record CreateUserCommand(
-    string UserName,
-    string Name,
-    string Email,
-    string Password,
-    string PasswordConfirmation
-) : IRequest<Result<CreateUserResponse>>
-{
+public class CreateUserCommand : IRequest<Result<CreateUserResponse>> {
+    public string UserName { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string PasswordConfirmation { get; set; } = string.Empty;
     [JsonIgnore] public UserRoles Role { get; set; }
 
-    public Domain.Entities.Identity.User AssignTo() => new()
-    {
-        UserName = UserName,
-        Email = Email,
-        Name = Name,
-    };
+    public Domain.Entities.Identity.User AssignTo() {
+        return new Domain.Entities.Identity.User {
+            UserName = UserName,
+            Email = Email,
+            Name = Name,
+        };
+    }
 }

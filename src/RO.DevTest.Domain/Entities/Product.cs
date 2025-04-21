@@ -12,5 +12,5 @@ public class Product : BaseEntity
     public int AvailableQuantity { get; set; }
     public ProductCategory ProductCategory { get; set; }
     public Guid AdminId { get; set; }
-    public User Admin { get; set; } = new();
+    public User? Admin { get; set; }
 }

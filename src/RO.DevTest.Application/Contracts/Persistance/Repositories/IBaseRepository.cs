@@ -30,21 +30,6 @@ public interface IBaseRepository<T> where T : class
     /// <param name="entity">The entity to update</param>
     Task UpdateAsync(T entity, CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Returns an <see cref="IQueryable{T}"/> for further query composition,
-    /// with optional includes for navigation properties.
-    /// </summary>
-    /// <param name="predicate">The filter expression to apply.</param>
-    /// <param name="includes">
-    /// Optional related entities to include in the query results.
-    /// Useful for eager loading of navigation properties.
-    /// </param>
-    /// <returns>
-    /// A queryable collection of <typeparamref name="T"/> that matches the given predicate,
-    /// with optional navigation properties included.
-    /// </returns>
-
-    IQueryable<T> GetQueryable(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
 
     /// <summary>
     /// Deletes one entry from the database

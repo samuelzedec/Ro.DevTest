@@ -4,10 +4,11 @@ using RO.DevTest.Domain.Enums;
 
 namespace RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 
-public record CreateProductCommand(
-    string Name,
-    string Description,
-    decimal UnitPrice,
-    int AvailableQuantity,
-    ProductCategory ProductCategory
-) : IRequest<Result<CreateProductResponse>>;
+public class CreateProductCommand : IRequest<Result<CreateProductResponse>>
+{
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public decimal UnitPrice { get; set; }
+    public int AvailableQuantity { get; set; }
+    public ProductCategory ProductCategory { get; set; }
+}

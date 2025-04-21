@@ -6,22 +6,19 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 {
     public UpdateUserCommandValidator()
     {
-        When(u => !string.IsNullOrWhiteSpace(u.UserName), () =>
-        {
+        When(u => !string.IsNullOrEmpty(u.UserName), () => {
             RuleFor(u => u.UserName)
                 .MaximumLength(255)
                 .WithMessage("O nome de usuário deve ter no máximo 255 caracteres");
         });
-
-        When(u => !string.IsNullOrWhiteSpace(u.Name), () =>
-        {
+        
+        When(u => !string.IsNullOrEmpty(u.Name), () => {
             RuleFor(u => u.Name)
                 .MaximumLength(255)
                 .WithMessage("O nome deve ter no máximo 255 caracteres");
         });
-
-        When(u => !string.IsNullOrWhiteSpace(u.Email), () =>
-        {
+        
+        When(u => !string.IsNullOrEmpty(u.Email), () => {
             RuleFor(u => u.Email)
                 .EmailAddress()
                 .WithMessage("Formato de e-mail inválido")

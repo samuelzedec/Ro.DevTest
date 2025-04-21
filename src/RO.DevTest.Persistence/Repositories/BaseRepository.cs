@@ -8,7 +8,6 @@ public class BaseRepository<T>(DefaultContext context)
     : IBaseRepository<T> where T : class
 {
     private DbSet<T> Table { get; } = context.Set<T>();
-
     public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
     {
         await Table.AddAsync(entity, cancellationToken);
@@ -30,19 +29,12 @@ public class BaseRepository<T>(DefaultContext context)
 
     public async Task<T?> GetAsync(
         CancellationToken cancellationToken,
-        Expression<Func<T, bool>> predicate,
+        Expression<Func<T, bool>> predicate, 
         params Expression<Func<T, object>>[] includes
     )
         => await GetQueryWithIncludes(predicate, includes)
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
-
-    public IQueryable<T> GetQueryable(
-        Expression<Func<T, bool>> predicate,
-        params Expression<Func<T, object>>[] includes
-    )
-        => GetQueryWithIncludes(predicate, includes)
-            .AsNoTracking();
 
     /// <summary>
     /// Generates a filtered <see cref="IQueryable{T}"/>, based on its
@@ -84,7 +76,10 @@ public class BaseRepository<T>(DefaultContext context)
     private IQueryable<T> GetWhereQuery(Expression<Func<T, bool>> predicate)
     {
         IQueryable<T> baseQuery = Table;
-        baseQuery = baseQuery.Where(predicate);
+
+        if (predicate is not null)
+            baseQuery = baseQuery.Where(predicate);
+
         return baseQuery;
     }
 }
