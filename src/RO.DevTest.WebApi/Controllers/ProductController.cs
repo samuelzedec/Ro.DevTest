@@ -5,9 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 using RO.DevTest.Application.Features.Product.Commands.UpdateProductCommand;
+using RO.DevTest.Application.Features.Product.Queries.GetAllProductsQuery;
 using RO.DevTest.Application.Features.Product.Queries.GetProductQuery;
-using RO.DevTest.Application.Features.Product.Queries.GetProductsByAdminIdQuery;
-using RO.DevTest.Application.Features.Product.Queries.GetProductsByCategoryQuery;
 using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -67,28 +66,13 @@ public class ProductController(IMediator mediator) : ControllerBase
     
     [HttpGet]
     [Authorize]
-    [Route("me")]
-    [ActionName("GetProductByAdminId")]
-    [ProducesResponseType(typeof(Result<List<GetProductsByAdminIdResponse>>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<List<GetProductsByAdminIdResponse>>), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(Result<List<GetProductsByAdminIdResponse>>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetProductByAdminId(
-        [FromQuery] GetProductsByAdminIdQuery request,
-        CancellationToken cancellationToken)
-    {
-        var response = await mediator.Send(request, cancellationToken);
-        return StatusCode(response.StatusCode, response);
-    }
-    
-    [HttpGet]
-    [Authorize]
     [Route("")]
-    [ActionName("GetProductByCategory")]
-    [ProducesResponseType(typeof(Result<List<GetProductsByCategoryResponse>>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<List<GetProductsByCategoryResponse>>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<List<GetProductsByCategoryResponse>>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetProductByCategory(
-        [FromQuery] GetProductsByCategoryQuery request,
+    [ActionName("GetAllProducts")]
+    [ProducesResponseType(typeof(Result<List<GetAllProductsResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<List<GetAllProductsResponse>>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<List<GetAllProductsResponse>>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAllProducts(
+        [FromQuery] GetAllProductsQuery request,
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);

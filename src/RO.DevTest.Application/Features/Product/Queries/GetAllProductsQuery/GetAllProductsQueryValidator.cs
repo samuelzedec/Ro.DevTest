@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace RO.DevTest.Application.Features.Product.Queries.GetProductsByAdminIdQuery;
+namespace RO.DevTest.Application.Features.Product.Queries.GetAllProductsQuery;
 
-public class GetProductsByAdminIdQueryValidator : AbstractValidator<GetProductsByAdminIdQuery>
+public class GetAllProductsQueryValidator : AbstractValidator<GetAllProductsQuery>
 {
-    public GetProductsByAdminIdQueryValidator()
+    public GetAllProductsQueryValidator()
     {
         RuleFor(p => p.PageSize)
             .GreaterThan(0)
