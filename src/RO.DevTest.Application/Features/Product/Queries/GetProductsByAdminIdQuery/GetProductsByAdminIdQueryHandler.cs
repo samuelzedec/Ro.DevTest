@@ -33,10 +33,7 @@ public class GetProductsByAdminIdQueryHandler(
                     "You are not an administrator to have products");
 
             var query = productRepository.GetQueryable(p =>
-                p.AdminId == Guid.Parse(currentUserService.GetCurrentUserId())
-                && p.Name.ToLower().Contains(request.SearchTerm.ToLower())); 
-            // Usando ToLower() para busca case-insensitive pois não temos acesso ao EF.Functions.ILike do Npgsql
-            // Nota: Esta abordagem funciona mas não é ideal para performance, pois impede o uso de índices no banco de dados
+                p.AdminId == Guid.Parse(currentUserService.GetCurrentUserId())); 
 
             var paginatedProducts = await query
                 .OrderBy(p => p.ProductCategory)
@@ -44,9 +41,10 @@ public class GetProductsByAdminIdQueryHandler(
                 .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
-            var paginatedProductsResponse = new List<GetProductsByAdminIdResponse>(
-                paginatedProducts.Select(p => new GetProductsByAdminIdResponse(p)).ToList());
-
+            var paginatedProductsResponse = paginatedProducts
+                .Select(p => new GetProductsByAdminIdResponse(p))
+                .ToList();
+            
             return Result<List<GetProductsByAdminIdResponse>>.Success(paginatedProductsResponse,
                 messages: "Products found");
         }
