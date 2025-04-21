@@ -1,8 +1,8 @@
 using RO.DevTest.Domain.Extensions;
 
-namespace RO.DevTest.Application.Features.Product.Queries.GetProductsByCategoryQuery;
+namespace RO.DevTest.Application.Features.Product.Queries.GetAllProductsQuery;
 
-public class GetProductsByCategoryResponse
+public class GetAllProductsResponse
 {
     public Guid Id { get; init; } 
     public string Name { get; init; }
@@ -11,7 +11,7 @@ public class GetProductsByCategoryResponse
     public string Category { get; init; }
     public string AdminName { get; init; }
     
-    public GetProductsByCategoryResponse(Domain.Entities.Product product)
+    public GetAllProductsResponse(Domain.Entities.Product product)
     {
         Id = product.Id;
         Name = product.Name;
