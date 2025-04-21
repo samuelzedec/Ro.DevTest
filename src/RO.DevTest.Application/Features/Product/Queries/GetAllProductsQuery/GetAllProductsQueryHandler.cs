@@ -27,8 +27,12 @@ public class GetAllProductsQueryHandler(
             }
 
             var query = request.AdminId.HasValue
-                ? productRepository.GetQueryable(p => p.AdminId == request.AdminId.Value, p => p.Admin)
-                : productRepository.GetQueryable(p => true, p => p.Admin);
+                ? productRepository.GetQueryable(
+                    p => p.AdminId == request.AdminId.Value && p.DeletedAt == null,
+                    p => p.Admin)
+                : productRepository.GetQueryable(
+                    p => p.DeletedAt == null,
+                    p => p.Admin);
 
             if (request.Category.HasValue)
                 query = query.Where(p => p.ProductCategory == request.Category.Value);
@@ -39,7 +43,7 @@ public class GetAllProductsQueryHandler(
                 .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
-            return Result<List<GetAllProductsResponse>>.Success(paginatedProducts.Select(p 
+            return Result<List<GetAllProductsResponse>>.Success(paginatedProducts.Select(p
                 => new GetAllProductsResponse(p)).ToList(), messages: "Products found");
         }
         catch (Exception ex)

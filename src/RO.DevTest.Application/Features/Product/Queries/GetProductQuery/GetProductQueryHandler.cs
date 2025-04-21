@@ -26,7 +26,7 @@ public class GetProductQueryHandler(
 
             var product = await productRepository.GetAsync(
                 cancellationToken, 
-                p => p.Id == request.ProductId,
+                p => p.Id == request.ProductId && p.DeletedAt == null,
                 a => a.Admin);
         
             if(product is null) 
