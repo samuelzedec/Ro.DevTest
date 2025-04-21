@@ -24,7 +24,7 @@ public class AuthController(IMediator mediator) : ControllerBase
         => Ok(Result<dynamic>.Success(null, messages: "Authenticated"));
     
     [HttpPost]
-    [Route("")]
+    [Route("login")]
     [ActionName("LoginAsync")]
     [ProducesResponseType(typeof(Result<LoginResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<LoginResponse>), StatusCodes.Status404NotFound)]

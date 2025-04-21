@@ -6,6 +6,7 @@ using NSwag.Annotations;
 using RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 using RO.DevTest.Application.Features.Product.Commands.UpdateProductCommand;
 using RO.DevTest.Application.Features.Product.Queries.GetProductQuery;
+using RO.DevTest.Application.Features.Product.Queries.GetProductsByAdminIdQuery;
 using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -51,6 +52,7 @@ public class ProductController(IMediator mediator) : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("{productId:guid}")]
+    [ActionName("GetProduct")]
     [ProducesResponseType(typeof(Result<GetProductResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result<GetProductResponse>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(Result<GetProductResponse>), StatusCodes.Status500InternalServerError)]
@@ -59,6 +61,21 @@ public class ProductController(IMediator mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(new GetProductQuery(productId), cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("")]
+    [ActionName("GetProductByAdminId")]
+    [ProducesResponseType(typeof(Result<List<GetProductsByAdminIdResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<List<GetProductsByAdminIdResponse>>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<List<GetProductsByAdminIdResponse>>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetProductByAdminId(
+        [FromQuery] GetProductsByAdminIdQuery request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
 }

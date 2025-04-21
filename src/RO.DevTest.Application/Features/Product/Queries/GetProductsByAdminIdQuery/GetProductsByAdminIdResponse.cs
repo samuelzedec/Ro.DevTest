@@ -1,25 +1,21 @@
 using RO.DevTest.Domain.Extensions;
 
-namespace RO.DevTest.Application.Features.Product.Queries.GetProductQuery;
+namespace RO.DevTest.Application.Features.Product.Queries.GetProductsByAdminIdQuery;
 
-public record GetProductResponse
+public record GetProductsByAdminIdResponse
 {
     public Guid Id { get; init; } 
     public string Name { get; init; }
     public string Description { get; init; }
     public Decimal UnitPrice { get; init; }
     public string Category { get; init; }
-    public string AdminName { get; init; }
-    public string AdminEmail { get; init; }
     
-    public GetProductResponse(Domain.Entities.Product product)
+    public GetProductsByAdminIdResponse(Domain.Entities.Product product)
     {
         Id = product.Id;
         Name = product.Name;
         Description = product.Description;
         UnitPrice = product.UnitPrice;
         Category = product.ProductCategory.GetDescription();
-        AdminName = product.Admin.Name;
-        AdminEmail = product.Admin.Email!;
     }
 }

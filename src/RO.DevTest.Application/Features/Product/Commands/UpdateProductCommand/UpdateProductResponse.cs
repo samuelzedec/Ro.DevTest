@@ -4,11 +4,11 @@ namespace RO.DevTest.Application.Features.Product.Commands.UpdateProductCommand;
 
 public record UpdateProductResponse
 {
-    public Guid Id { get; set; } 
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public Decimal UnitPrice { get; set; }
-    public string Category { get; set; }
+    public Guid Id { get; init; } 
+    public string Name { get; init; }
+    public string Description { get; init; }
+    public Decimal UnitPrice { get; init; }
+    public string Category { get; init; }
 
     public UpdateProductResponse(Domain.Entities.Product product)
     {
