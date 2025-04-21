@@ -35,7 +35,7 @@ public class RefreshTokenCommandHandler(
                     messages: "User not found");
             }
 
-            if (await tokenService.ValidationRefreshTokenAsync(user))
+            if (await tokenService.ValidationRefreshTokenAsync(user, request.RefreshToken))
             {
                 var token = tokenService.GenerateAccessToken(user);
                 var refreshToken = await tokenService.CreateRefreshTokenAsync(user);

@@ -28,7 +28,9 @@ public class UpdateProductCommandHandler(
             
             var product = await productRepository.GetAsync(
                 cancellationToken,
-                p => p.Id == request.Id && p.AdminId == Guid.Parse(currentUserService.GetCurrentUserId()));
+                p => p.Id == request.Id 
+                     && p.AdminId == Guid.Parse(currentUserService.GetCurrentUserId())
+                     && p.DeletedAt == null);
 
             if (product is null)
                 return Result<UpdateProductResponse>.Failure(messages: "Product not found or you do not have access");

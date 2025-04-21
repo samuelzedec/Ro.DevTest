@@ -38,9 +38,13 @@ public class TokenService(IOptions<JwtSettings> jwtSettings, IUserTokenRepositor
             tokenHandler.CreateToken(tokenDescriptor));
     }
 
-    public async Task<bool> ValidationRefreshTokenAsync(User user)
+    public async Task<bool> ValidationRefreshTokenAsync(User user, string refreshTokenCurrent)
     {
         var refreshToken = await repository.GetRefreshTokenByUserIdAsync(user.Id);
+
+        if (refreshToken?.Value != refreshTokenCurrent)
+            return false;
+        
         if (refreshToken?.ExpiresAt <= DateTime.UtcNow)
             return false;
 
