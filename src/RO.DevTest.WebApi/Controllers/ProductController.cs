@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
+using RO.DevTest.Application.Features.Product.Commands.DeleteProductCommand;
 using RO.DevTest.Application.Features.Product.Commands.UpdateProductCommand;
 using RO.DevTest.Application.Features.Product.Queries.GetAllProductsQuery;
 using RO.DevTest.Application.Features.Product.Queries.GetProductQuery;
@@ -73,6 +74,22 @@ public class ProductController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(Result<List<GetAllProductsResponse>>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllProducts(
         [FromQuery] GetAllProductsQuery request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    
+    [HttpDelete]
+    [Authorize]
+    [Route("")]
+    [ActionName("DeleteProduct")]
+    [ProducesResponseType(typeof(Result<DeleteProductResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<DeleteProductResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<DeleteProductResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<DeleteProductResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteProduct(
+        [FromQuery] DeleteProductCommand request,
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);

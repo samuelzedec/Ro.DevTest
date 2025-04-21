@@ -12,8 +12,8 @@ using RO.DevTest.Persistence;
 namespace RO.DevTest.Persistence.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250419203859_v5")]
-    partial class v5
+    [Migration("20250421183901_v6")]
+    partial class v6
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -325,6 +325,10 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnName("created_on")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
+                        .HasColumnName("deleted_at");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("VARCHAR(455)")
@@ -470,7 +474,7 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_sale_admin");
+                        .HasConstraintName("fk_product_admin");
 
                     b.Navigation("Admin");
                 });

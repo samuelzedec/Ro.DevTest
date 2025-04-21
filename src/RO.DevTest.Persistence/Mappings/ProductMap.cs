@@ -56,7 +56,7 @@ public class ProductMap : IEntityTypeConfiguration<Product>
             .WithMany()
             .HasForeignKey(s => s.AdminId)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("fk_sale_admin")
+            .HasConstraintName("fk_product_admin")
             .IsRequired();
 
         builder
@@ -69,6 +69,12 @@ public class ProductMap : IEntityTypeConfiguration<Product>
             .Property(p => p.ModifiedOn)
             .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
             .HasColumnName("modified_on")
+            .IsRequired(false);
+        
+        builder
+            .Property(p => p.DeletedAt)
+            .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
+            .HasColumnName("deleted_at")
             .IsRequired(false);
     }
 }

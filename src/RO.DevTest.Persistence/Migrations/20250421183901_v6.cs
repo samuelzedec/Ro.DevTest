@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RO.DevTest.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class v5 : Migration
+    public partial class v6 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -173,6 +173,7 @@ namespace RO.DevTest.Persistence.Migrations
                     available_quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     product_category = table.Column<short>(type: "SMALLINT", nullable: false),
                     AdminId = table.Column<Guid>(type: "UUID", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true),
                     created_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     modified_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true)
                 },
@@ -180,7 +181,7 @@ namespace RO.DevTest.Persistence.Migrations
                 {
                     table.PrimaryKey("pk_product_id", x => x.id);
                     table.ForeignKey(
-                        name: "fk_sale_admin",
+                        name: "fk_product_admin",
                         column: x => x.AdminId,
                         principalTable: "aspnet_user",
                         principalColumn: "id",
