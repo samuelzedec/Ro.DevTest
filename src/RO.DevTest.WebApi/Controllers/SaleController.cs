@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.Sale.Commands.CreateSaleCommand;
+using RO.DevTest.Application.Features.Sale.Commands.DeleteSaleCommand;
 using RO.DevTest.Application.Features.Sale.Commands.UpdateSaleCommand;
 using RO.DevTest.Domain.Abstract;
 
@@ -45,6 +46,21 @@ public class SaleController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(Result<UpdateSaleResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateSale(
         [FromBody] UpdateSaleCommand request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    
+    [HttpDelete]
+    [Authorize]
+    [Route("")]
+    [ActionName("DeleteSale")]
+    [ProducesResponseType(typeof(Result<DeleteSaleResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<DeleteSaleResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<DeleteSaleResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteSale(
+        [FromBody] DeleteSaleCommand request,
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);
