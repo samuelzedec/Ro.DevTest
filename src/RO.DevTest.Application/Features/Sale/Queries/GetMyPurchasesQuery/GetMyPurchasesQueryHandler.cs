@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
 public class GetMyPurchasesQueryHandler(
     ISaleRepository saleRepository,
     ICurrentUserService currentUserService,
+    IValidator<GetMyPurchasesQuery> validator,
     ILogger<GetMyPurchasesQueryHandler> logger) 
     : IRequestHandler<GetMyPurchasesQuery, Result<List<GetMyPurchasesResponse>>>
 {
@@ -18,6 +20,12 @@ public class GetMyPurchasesQueryHandler(
     {
         try
         {
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return Result<List<GetMyPurchasesResponse>>.Failure(messages:
+                    validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
+            }
             if (currentUserService.IsAdmin())
                 return Result<List<GetMyPurchasesResponse>>.Failure(messages: "Only customers have purchases");
 
@@ -25,6 +33,8 @@ public class GetMyPurchasesQueryHandler(
                 .GetQueryable(
                     s => s.CustomerId == Guid.Parse(currentUserService.GetCurrentUserId()) && s.DeletedAt == null,
                     s => s.Product)
+                .Skip((request.PageNumber -1) * request.PageSize)
+                .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
             
             return Result<List<GetMyPurchasesResponse>>.Success(
