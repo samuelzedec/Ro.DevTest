@@ -6,6 +6,7 @@ using NSwag.Annotations;
 using RO.DevTest.Application.Features.Sale.Commands.CreateSaleCommand;
 using RO.DevTest.Application.Features.Sale.Commands.DeleteSaleCommand;
 using RO.DevTest.Application.Features.Sale.Commands.UpdateSaleCommand;
+using RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
 using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -63,6 +64,21 @@ public class SaleController(IMediator mediator) : ControllerBase
         [FromBody] DeleteSaleCommand request,
         CancellationToken cancellationToken)
     {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("my-purchases")]
+    [ActionName("GetMyPurchases")]
+    [ProducesResponseType(typeof(Result<List<GetMyPurchasesResponse>>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<List<GetMyPurchasesResponse>>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<List<GetMyPurchasesResponse>>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetMyPurchases(
+        CancellationToken cancellationToken)
+    {
+        var request = new GetMyPurchasesQuery();
         var response = await mediator.Send(request, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
