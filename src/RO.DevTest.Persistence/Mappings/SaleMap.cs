@@ -94,5 +94,11 @@ public class SaleMap : IEntityTypeConfiguration<Sale>
             .HasColumnName("modified_on")
             .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
             .IsRequired(false);
+        
+        builder
+            .Property(s => s.DeletedAt)
+            .HasColumnName("deleted_at")
+            .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
+            .IsRequired(false);
     }
 }

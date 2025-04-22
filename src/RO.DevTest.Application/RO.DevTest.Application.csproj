@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Sale\Commands\DeleteSaleCommand\" />
-    <Folder Include="Features\Sale\Commands\UpdateSaleCommand\" />
     <Folder Include="Features\Sale\Queries\" />
   </ItemGroup>
 
