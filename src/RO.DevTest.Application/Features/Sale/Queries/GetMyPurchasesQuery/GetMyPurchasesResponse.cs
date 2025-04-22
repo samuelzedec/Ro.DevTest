@@ -2,7 +2,7 @@ using RO.DevTest.Domain.Extensions;
 
 namespace RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
 
-public class GetMyPurchasesResponse
+public record GetMyPurchasesResponse
 {
     public Guid SaleId { get; init; }
     public string ProductName { get; set; }
