@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RO.DevTest.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class v6 : Migration
+    public partial class v7 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -173,9 +173,9 @@ namespace RO.DevTest.Persistence.Migrations
                     available_quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     product_category = table.Column<short>(type: "SMALLINT", nullable: false),
                     AdminId = table.Column<Guid>(type: "UUID", nullable: false),
-                    deleted_at = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true),
                     created_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    modified_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true)
+                    modified_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true),
+                    deleted_at = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -201,7 +201,8 @@ namespace RO.DevTest.Persistence.Migrations
                     quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "numeric", nullable: false),
                     created_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    modified_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true)
+                    modified_on = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true),
+                    deleted_at = table.Column<DateTime>(type: "TIMESTAMP WITHOUT TIME ZONE", nullable: true)
                 },
                 constraints: table =>
                 {

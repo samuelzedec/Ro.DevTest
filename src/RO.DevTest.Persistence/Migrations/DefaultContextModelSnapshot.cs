@@ -378,6 +378,10 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("UUID")
                         .HasColumnName("customer_id");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
+                        .HasColumnName("deleted_at");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
                         .HasColumnName("modified_on");

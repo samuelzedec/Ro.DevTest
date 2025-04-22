@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.Sale.Commands.CreateSaleCommand;
+using RO.DevTest.Application.Features.Sale.Commands.UpdateSaleCommand;
 using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -17,7 +18,7 @@ public class SaleController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Authorize]
     [Route("")]
-    [ActionName("CreateProduct")]
+    [ActionName("CreateSale")]
     [ProducesResponseType(typeof(Result<CreateSaleResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(Result<CreateSaleResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<CreateSaleResponse>), StatusCodes.Status500InternalServerError)]
@@ -33,5 +34,20 @@ public class SaleController(IMediator mediator) : ControllerBase
             return StatusCode(response.StatusCode, response);
             
         return Created(HttpContext.Request.GetDisplayUrl(), response);
+    }
+    
+    [HttpPut]
+    [Authorize]
+    [Route("")]
+    [ActionName("UpdateSale")]
+    [ProducesResponseType(typeof(Result<UpdateSaleResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<UpdateSaleResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<UpdateSaleResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateSale(
+        [FromBody] UpdateSaleCommand request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
     }
 }

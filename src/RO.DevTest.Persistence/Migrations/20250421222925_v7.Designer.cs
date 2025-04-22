@@ -12,8 +12,8 @@ using RO.DevTest.Persistence;
 namespace RO.DevTest.Persistence.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250421183901_v6")]
-    partial class v6
+    [Migration("20250421222925_v7")]
+    partial class v7
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -380,6 +380,10 @@ namespace RO.DevTest.Persistence.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("UUID")
                         .HasColumnName("customer_id");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
+                        .HasColumnName("deleted_at");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")

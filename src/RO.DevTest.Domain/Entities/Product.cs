@@ -13,5 +13,4 @@ public class Product : BaseEntity
     public ProductCategory ProductCategory { get; set; }
     public Guid AdminId { get; set; }
     public User Admin { get; set; } = null!;
-    public DateTime? DeletedAt { get; set; }
 }
