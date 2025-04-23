@@ -12,8 +12,8 @@ using RO.DevTest.Persistence;
 namespace RO.DevTest.Persistence.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250421222925_v7")]
-    partial class v7
+    [Migration("20250423001304_v8")]
+    partial class v8
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -418,6 +418,51 @@ namespace RO.DevTest.Persistence.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("sale", (string)null);
+                });
+
+            modelBuilder.Entity("RO.DevTest.Domain.ReadModels.AdminSalesSummary", b =>
+                {
+                    b.Property<Guid>("AdminId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("admin_id");
+
+                    b.Property<string>("AdminUsername")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("admin_username");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("integer")
+                        .HasColumnName("month");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("product_name");
+
+                    b.Property<int>("TotalItemsSold")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_items_sold");
+
+                    b.Property<decimal>("TotalValue")
+                        .HasColumnType("numeric")
+                        .HasColumnName("total_value");
+
+                    b.Property<int>("TransactionCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("transaction_count");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer")
+                        .HasColumnName("year");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_admin_product_sales", (string)null);
                 });
 
             modelBuilder.Entity("RO.DevTest.Domain.Entities.Identity.RoleClaim", b =>
