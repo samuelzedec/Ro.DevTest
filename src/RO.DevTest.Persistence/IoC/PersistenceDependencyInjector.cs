@@ -30,5 +30,6 @@ public static class PersistenceDependencyInjector
         services.AddTransient<IProductRepository, ProductRepository>();
         services.AddTransient<ISaleRepository, SaleRepository>();
         services.AddTransient<IUserTokenRepository, UserTokenRepository>();
+        services.AddTransient<IAdminSalesSummaryRepository, AdminSalesSummaryRepository>();
     }
 }

@@ -35,11 +35,10 @@ public class GetMyPurchasesQueryHandler(
                     s => s.Product)
                 .Skip((request.PageNumber -1) * request.PageSize)
                 .Take(request.PageSize)
+                .Select(s => new GetMyPurchasesResponse(s))
                 .ToListAsync(cancellationToken);
             
-            return Result<List<GetMyPurchasesResponse>>.Success(
-                sales.Select(s => new GetMyPurchasesResponse(s)).ToList(),
-                messages: "Purchases found");
+            return Result<List<GetMyPurchasesResponse>>.Success(sales, messages: "Purchases found");
         }
         catch (Exception ex)
         {

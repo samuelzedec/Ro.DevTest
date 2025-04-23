@@ -3,8 +3,7 @@ SELECT u.id                                   AS admin_id,
        u.user_name                            AS admin_username,
        p.id                                   AS product_id,
        p.name                                 AS product_name,
-       EXTRACT(YEAR FROM s.transaction_date)  AS year,
-       EXTRACT(MONTH FROM s.transaction_date) AS month,
+       s.transaction_date::date               AS transaction_date,
        SUM(s."UnitPrice" * s.quantity)        AS total_value,
        COUNT(*)                               AS transaction_count,
        SUM(s.quantity)                        AS total_items_sold
@@ -15,9 +14,7 @@ GROUP BY u.id,
          u.user_name,
          p.id,
          p.name,
-         EXTRACT(YEAR FROM s.transaction_date),
-         EXTRACT(MONTH FROM s.transaction_date)
+         s.transaction_date::date
 ORDER BY u.user_name,
          p.name,
-         year,
-         month;
+         transaction_date

@@ -7,6 +7,7 @@ using RO.DevTest.Application.Features.Sale.Commands.CreateSaleCommand;
 using RO.DevTest.Application.Features.Sale.Commands.DeleteSaleCommand;
 using RO.DevTest.Application.Features.Sale.Commands.UpdateSaleCommand;
 using RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
+using RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetSaleByIdQuery;
 using RO.DevTest.Domain.Abstract;
 
@@ -88,14 +89,29 @@ public class SaleController(IMediator mediator) : ControllerBase
     [Authorize]
     [Route("{saleId:guid}")]
     [ActionName("GetSaleById")]
-    [ProducesResponseType(typeof(Result<GetSaleByIdQuery>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(Result<GetSaleByIdQuery>), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(Result<GetSaleByIdQuery>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result<GetSaleByIdResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<GetSaleByIdResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<GetSaleByIdResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetSaleById(
         [FromRoute] Guid saleId,
         CancellationToken cancellationToken)
     {
         var request = new GetSaleByIdQuery(saleId);
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("admin-sales")]
+    [ActionName("GetAdminSales")]
+    [ProducesResponseType(typeof(Result<List<GetProductSalesByAdminResponse>>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<List<GetProductSalesByAdminResponse>>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<List<GetProductSalesByAdminResponse>>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAdminSales(
+        [FromQuery] GetProductSalesByAdminQuery request,
+        CancellationToken cancellationToken)
+    {
         var response = await mediator.Send(request, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }

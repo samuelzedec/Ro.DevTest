@@ -41,10 +41,10 @@ public class GetAllProductsQueryHandler(
                 .OrderBy(p => p.ProductCategory)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
+                .Select(p => new GetAllProductsResponse(p))
                 .ToListAsync(cancellationToken);
 
-            return Result<List<GetAllProductsResponse>>.Success(paginatedProducts.Select(p
-                => new GetAllProductsResponse(p)).ToList(), messages: "Products found");
+            return Result<List<GetAllProductsResponse>>.Success(paginatedProducts, messages: "Products found");
         }
         catch (Exception ex)
         {

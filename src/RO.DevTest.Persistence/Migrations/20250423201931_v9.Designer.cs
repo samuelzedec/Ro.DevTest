@@ -12,8 +12,8 @@ using RO.DevTest.Persistence;
 namespace RO.DevTest.Persistence.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250423001304_v8")]
-    partial class v8
+    [Migration("20250423201931_v9")]
+    partial class v9
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -431,10 +431,6 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("admin_username");
 
-                    b.Property<int>("Month")
-                        .HasColumnType("integer")
-                        .HasColumnName("month");
-
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
@@ -456,9 +452,9 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("transaction_count");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("integer")
-                        .HasColumnName("year");
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("transaction_date");
 
                     b.ToTable((string)null);
 
