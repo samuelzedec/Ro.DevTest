@@ -1,4 +1,5 @@
 using FluentValidation;
+using RO.DevTest.Domain.Extensions;
 
 namespace RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
 
@@ -6,6 +7,20 @@ public class GetMyPurchasesQueryValidator : AbstractValidator<GetMyPurchasesQuer
 {
     public GetMyPurchasesQueryValidator()
     {
+        When(s => s.StartDate.HasValue, () =>
+        {
+            RuleFor(s => s.EndDate)
+                .NotNull()
+                .WithMessage("Data final deve ser informada");
+        });
+        
+        When(s => s.EndDate.HasValue && s.StartDate.HasValue, () =>
+        {
+            RuleFor(s => s.EndDate)
+                .GreaterThan(s => s.StartDate)
+                .WithMessage("Data final deve ser maior que data de início");
+        });
+        
         RuleFor(s => s.PageNumber)
             .GreaterThan(0)
             .WithMessage("O número da página deve ser maior que zero");

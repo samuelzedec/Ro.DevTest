@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure.Services;
 using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Domain.Abstract;
+using RO.DevTest.Domain.Extensions;
 
 namespace RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
 
@@ -13,10 +14,11 @@ public class GetMyPurchasesQueryHandler(
     ISaleRepository saleRepository,
     ICurrentUserService currentUserService,
     IValidator<GetMyPurchasesQuery> validator,
-    ILogger<GetMyPurchasesQueryHandler> logger) 
+    ILogger<GetMyPurchasesQueryHandler> logger)
     : IRequestHandler<GetMyPurchasesQuery, Result<List<GetMyPurchasesResponse>>>
 {
-    public async Task<Result<List<GetMyPurchasesResponse>>> Handle(GetMyPurchasesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<GetMyPurchasesResponse>>> Handle(GetMyPurchasesQuery request,
+        CancellationToken cancellationToken)
     {
         try
         {
@@ -26,18 +28,28 @@ public class GetMyPurchasesQueryHandler(
                 return Result<List<GetMyPurchasesResponse>>.Failure(messages:
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
+
             if (currentUserService.IsAdmin())
                 return Result<List<GetMyPurchasesResponse>>.Failure(messages: "Only customers have purchases");
 
+            request.StartDate ??= request.EndDate.HasValue
+                ? DateTime.UtcNow.GetFirstDay(request.EndDate.Value.Year, request.EndDate.Value.Month)
+                : DateTime.UtcNow.GetFirstDay();
+            
+            request.EndDate ??= DateTime.UtcNow.GetLastDay();
+
             var sales = await saleRepository
-                .GetQueryable(
-                    s => s.CustomerId == Guid.Parse(currentUserService.GetCurrentUserId()) && s.DeletedAt == null,
+                .GetQueryable(s
+                        => s.CustomerId == Guid.Parse(currentUserService.GetCurrentUserId())
+                           && s.DeletedAt == null
+                           && s.TransactionDate >= request.StartDate
+                           && s.TransactionDate <= request.EndDate,
                     s => s.Product)
-                .Skip((request.PageNumber -1) * request.PageSize)
+                .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(s => new GetMyPurchasesResponse(s))
                 .ToListAsync(cancellationToken);
-            
+
             return Result<List<GetMyPurchasesResponse>>.Success(sales, messages: "Purchases found");
         }
         catch (Exception ex)

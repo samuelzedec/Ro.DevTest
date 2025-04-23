@@ -33,7 +33,10 @@ public class GetProductSalesByAdminQueryHandler(
                 return Result<List<GetProductSalesByAdminResponse>>.Failure(
                     messages: "Only admins have access to this information.");
 
-            request.StartDate ??= DateTime.UtcNow.GetFirstDay();
+            request.StartDate ??= request.EndDate.HasValue 
+                ? DateTime.UtcNow.GetFirstDay(request.EndDate.Value.Year, request.EndDate.Value.Month)
+                : DateTime.UtcNow.GetFirstDay();
+            
             request.EndDate ??= DateTime.UtcNow.GetLastDay();
 
             var sales = await adminSalesSummaryRepository

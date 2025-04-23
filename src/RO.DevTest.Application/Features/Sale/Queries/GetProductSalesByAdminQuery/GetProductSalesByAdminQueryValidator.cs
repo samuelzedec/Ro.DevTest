@@ -1,4 +1,5 @@
 using FluentValidation;
+using RO.DevTest.Domain.Extensions;
 
 namespace RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
 
@@ -6,10 +7,17 @@ public class GetProductSalesByAdminQueryValidator : AbstractValidator<GetProduct
 {
     public GetProductSalesByAdminQueryValidator()
     {
-        When(s => s.EndDate is not null, () =>
+        When(s => s.StartDate.HasValue, () =>
         {
-            RuleFor(s => s)
-                .Must(s => s.StartDate is not null && s.EndDate >= s.StartDate)
+            RuleFor(s => s.EndDate)
+                .NotNull()
+                .WithMessage("Data final deve ser informada");
+        });
+        
+        When(s => s.EndDate.HasValue && s.StartDate.HasValue, () =>
+        {
+            RuleFor(s => s.EndDate)
+                .GreaterThan(s => s.StartDate)
                 .WithMessage("Data final deve ser maior que data de início");
         });
         
