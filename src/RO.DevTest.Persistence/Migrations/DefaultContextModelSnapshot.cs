@@ -428,10 +428,6 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("admin_username");
 
-                    b.Property<int>("Month")
-                        .HasColumnType("integer")
-                        .HasColumnName("month");
-
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
@@ -453,9 +449,9 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("transaction_count");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("integer")
-                        .HasColumnName("year");
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("transaction_date");
 
                     b.ToTable((string)null);
 

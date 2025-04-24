@@ -6,8 +6,7 @@ public class AdminSalesSummary
     public string AdminUsername { get; set; } = string.Empty;
     public Guid ProductId { get; set; }
     public string ProductName { get; set; } = string.Empty;
-    public int Year { get; set; }
-    public int Month { get; set; }
+    public DateTime TransactionDate { get; set; }
     public decimal TotalValue { get; set; }
     public int TransactionCount { get; set; }
     public int TotalItemsSold { get; set; }

@@ -9,7 +9,7 @@ public class AdminSalesSummaryMapping : IEntityTypeConfiguration<AdminSalesSumma
     public void Configure(EntityTypeBuilder<AdminSalesSummary> builder)
     {
         builder.HasNoKey();
-        builder.ToView("vw_admin_product_sales");
+        builder.ToView("vw_admin_product_monthly_sales");
 
         builder
             .Property(x => x.AdminId)
@@ -28,12 +28,8 @@ public class AdminSalesSummaryMapping : IEntityTypeConfiguration<AdminSalesSumma
             .HasColumnName("product_name");
 
         builder
-            .Property(x => x.Year)
-            .HasColumnName("year");
-
-        builder
-            .Property(x => x.Month)
-            .HasColumnName("month");
+            .Property(x => x.TransactionDate)
+            .HasColumnName("transaction_date");
 
         builder
             .Property(x => x.TotalValue)

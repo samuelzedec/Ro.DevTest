@@ -8,16 +8,16 @@ using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Extensions;
 
-namespace RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetSalesByPeriodQuery;
 
-public class GetMyPurchasesQueryHandler(
+public class GetSalesByPeriodQueryHandler(
     ISaleRepository saleRepository,
     ICurrentUserService currentUserService,
-    IValidator<GetMyPurchasesQuery> validator,
-    ILogger<GetMyPurchasesQueryHandler> logger)
-    : IRequestHandler<GetMyPurchasesQuery, Result<List<GetMyPurchasesResponse>>>
+    IValidator<GetSalesByPeriodQuery> validator,
+    ILogger<GetSalesByPeriodQueryHandler> logger)
+    : IRequestHandler<GetSalesByPeriodQuery, Result<List<GetSalesByPeriodResponse>>>
 {
-    public async Task<Result<List<GetMyPurchasesResponse>>> Handle(GetMyPurchasesQuery request,
+    public async Task<Result<List<GetSalesByPeriodResponse>>> Handle(GetSalesByPeriodQuery request,
         CancellationToken cancellationToken)
     {
         try
@@ -25,37 +25,40 @@ public class GetMyPurchasesQueryHandler(
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                return Result<List<GetMyPurchasesResponse>>.Failure(messages:
+                return Result<List<GetSalesByPeriodResponse>>.Failure(messages:
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
 
-            if (currentUserService.IsAdmin())
-                return Result<List<GetMyPurchasesResponse>>.Failure(messages: "Only customers have purchases");
+            if (!currentUserService.IsAdmin())
+                return Result<List<GetSalesByPeriodResponse>>.Failure(messages: "Only admins have access");
 
             request.StartDate ??= request.EndDate.HasValue
                 ? DateTime.UtcNow.GetFirstDay(request.EndDate.Value.Year, request.EndDate.Value.Month)
                 : DateTime.UtcNow.GetFirstDay();
-            
+
             request.EndDate ??= DateTime.UtcNow.GetLastDay();
 
             var sales = await saleRepository
                 .GetQueryable(s
-                        => s.CustomerId == Guid.Parse(currentUserService.GetCurrentUserId())
+                        => s.AdminId == Guid.Parse(currentUserService.GetCurrentUserId())
                            && s.DeletedAt == null
                            && s.TransactionDate >= request.StartDate
                            && s.TransactionDate <= request.EndDate,
-                    s => s.Product)
+                    sp => sp.Product,
+                    sa => sa.Admin,
+                    sc => sc.Customer)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(s => new GetMyPurchasesResponse(s))
+                .Select(s => new GetSalesByPeriodResponse(s))
                 .ToListAsync(cancellationToken);
 
-            return Result<List<GetMyPurchasesResponse>>.Success(sales, messages: "Purchases found");
+            return Result<List<GetSalesByPeriodResponse>>.Success(sales, messages: "Purchases found");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<List<GetMyPurchasesResponse>>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<List<GetSalesByPeriodResponse>>.Failure(StatusCodes.Status500InternalServerError,
+                ex.Message);
         }
     }
 }
