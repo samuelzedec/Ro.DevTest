@@ -9,6 +9,7 @@ using RO.DevTest.Application.Features.Sale.Commands.UpdateSaleCommand;
 using RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetSaleByIdQuery;
+using RO.DevTest.Application.Features.Sale.Queries.GetSalesByPeriodQuery;
 using RO.DevTest.Domain.Abstract;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -72,7 +73,7 @@ public class SaleController(IMediator mediator) : ControllerBase
     
     [HttpGet]
     [Authorize]
-    [Route("my-purchases")]
+    [Route("customer")]
     [ActionName("GetMyPurchases")]
     [ProducesResponseType(typeof(Result<List<GetMyPurchasesResponse>>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(Result<List<GetMyPurchasesResponse>>), StatusCodes.Status400BadRequest)]
@@ -103,13 +104,28 @@ public class SaleController(IMediator mediator) : ControllerBase
     
     [HttpGet]
     [Authorize]
-    [Route("admin-sales")]
-    [ActionName("GetAdminSales")]
+    [Route("analysis")]
+    [ActionName("GetSalesAnalisys")]
     [ProducesResponseType(typeof(Result<List<GetProductSalesByAdminResponse>>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(Result<List<GetProductSalesByAdminResponse>>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Result<List<GetProductSalesByAdminResponse>>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAdminSales(
+    public async Task<IActionResult> GetSalesAnalisys(
         [FromQuery] GetProductSalesByAdminQuery request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("admin")]
+    [ActionName("GetAdminSales")]
+    [ProducesResponseType(typeof(Result<List<GetSalesByPeriodResponse>>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<List<GetSalesByPeriodResponse>>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<List<GetSalesByPeriodResponse>>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAdminSales(
+        [FromQuery] GetSalesByPeriodQuery request,
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);
