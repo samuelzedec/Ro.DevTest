@@ -10,16 +10,24 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5087:5087"
-    
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=testdev;Username=postgres;Password=postgres123
+      - Jwt__KeyPath=/app/Certificates/jwt-key.pfx
+      - Jwt__KeyPassword=
+      - Jwt__Issuer=RotaDasOficinas
+      - Jwt__Audience=RotaDasOficinas
+
   postgres:
-      image: postgres
-      container_name: postgres
-      environment:
-        - POSTGRES_PASSWORD=sony2006
-      ports:
-        - "5432:5432"
-      volumes:
-        - postgres_data:/var/lib/postgresql/data
+    image: postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=testdev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:

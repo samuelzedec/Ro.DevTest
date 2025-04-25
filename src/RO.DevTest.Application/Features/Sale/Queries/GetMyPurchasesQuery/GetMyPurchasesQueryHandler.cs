@@ -48,6 +48,7 @@ public class GetMyPurchasesQueryHandler(
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(s => new GetMyPurchasesResponse(s))
+                .OrderBy(s => s.TransactionDate)
                 .ToListAsync(cancellationToken);
 
             return Result<List<GetMyPurchasesResponse>>.Success(sales, messages: "Purchases found");

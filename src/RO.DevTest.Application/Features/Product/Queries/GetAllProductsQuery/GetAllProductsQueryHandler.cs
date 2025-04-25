@@ -38,10 +38,10 @@ public class GetAllProductsQueryHandler(
                 query = query.Where(p => p.ProductCategory == request.Category.Value);
 
             var paginatedProducts = await query
-                .OrderBy(p => p.ProductCategory)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(p => new GetAllProductsResponse(p))
+                .OrderBy(p => p.Category)
                 .ToListAsync(cancellationToken);
 
             return Result<List<GetAllProductsResponse>>.Success(paginatedProducts, messages: "Products found");

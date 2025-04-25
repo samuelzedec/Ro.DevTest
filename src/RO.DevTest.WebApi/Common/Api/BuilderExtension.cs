@@ -42,6 +42,8 @@ public static class BuilderExtension
     {
         builder.Services.Configure<JwtSettings>(
             builder.Configuration.GetSection("Jwt"));
+        
+        builder.Configuration.AddEnvironmentVariables();
     }
     
     private static void AddServices(this WebApplicationBuilder builder)
