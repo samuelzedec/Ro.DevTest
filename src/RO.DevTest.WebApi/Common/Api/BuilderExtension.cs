@@ -24,6 +24,7 @@ public static class BuilderExtension
         builder.AddSettings();
         builder.AddServices();
         builder.AddSecurity();
+        builder.AddContainerSupport();
     }
     
     private static void AddLogs(this WebApplicationBuilder builder)
@@ -45,23 +46,40 @@ public static class BuilderExtension
     
     private static void AddServices(this WebApplicationBuilder builder)
     {
+        // Classlib
         builder.Services.InjectPersistenceDependencies(builder.Configuration);
         builder.Services.InjectInfrastructureDependencies();
         builder.Services.AddValidatorsFromAssembly(typeof(ApplicationLayer).Assembly);
         
+        // MeditR
         builder.Services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssemblies(
                 typeof(ApplicationLayer).Assembly,
                 typeof(Program).Assembly
             ));
-
+        
+        // Api Config
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddControllers();
+        
         builder.Services.Configure<ApiBehaviorOptions>(options 
             => options.SuppressModelStateInvalidFilter = true);
+        
         builder.Services.Configure<JsonOptions>(options 
             => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
         
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("next", policy =>
+            {
+                policy // Caso dê tempo o front será em next
+                    .WithOrigins("localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+        
+        // Swagger
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddOpenApiDocument(document =>
         {
@@ -120,5 +138,11 @@ public static class BuilderExtension
             };
         });
         builder.Services.AddAuthorization();
+    }
+    
+    private static void AddContainerSupport(this WebApplicationBuilder builder)
+    {
+        builder.WebHost.ConfigureKestrel(serverOptions 
+            => serverOptions.ListenAnyIP(5087));
     }
 }
