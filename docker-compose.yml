@@ -1,0 +1,25 @@
+name: Ro.DevTest
+
+services:
+  webapi:
+    depends_on:
+      - postgres
+    container_name: webapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5087:5087"
+    
+  postgres:
+      image: postgres
+      container_name: postgres
+      environment:
+        - POSTGRES_PASSWORD=sony2006
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
