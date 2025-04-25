@@ -50,6 +50,7 @@ public class GetSalesByPeriodQueryHandler(
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(s => new GetSalesByPeriodResponse(s))
+                .OrderBy(s => s.TransactionDate)
                 .ToListAsync(cancellationToken);
 
             return Result<List<GetSalesByPeriodResponse>>.Success(sales, messages: "Purchases found");

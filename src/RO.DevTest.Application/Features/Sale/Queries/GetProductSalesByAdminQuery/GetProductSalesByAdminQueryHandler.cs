@@ -47,6 +47,7 @@ public class GetProductSalesByAdminQueryHandler(
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(s => new GetProductSalesByAdminResponse(s))
+                .OrderBy(s => s.TransactionDate)
                 .ToListAsync(cancellationToken);
 
             return Result<List<GetProductSalesByAdminResponse>>.Success(sales, messages: "Sales Found");

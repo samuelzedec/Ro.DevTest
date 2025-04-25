@@ -20,3 +20,5 @@
 *.coverage
 *.publishsettings
 *.pubxml
+[Ll]ogs/*
+![Ll]ogs/.gitkeep

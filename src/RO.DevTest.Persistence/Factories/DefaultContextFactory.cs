@@ -16,6 +16,7 @@ public class DefaultContextFactory : IDesignTimeDbContextFactory<DefaultContext>
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../RO.DevTest.WebApi"))
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables()
             .Build();
             
         var optionsBuilder = new DbContextOptionsBuilder<DefaultContext>();

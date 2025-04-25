@@ -1,7 +1,7 @@
 #!/bin/bash
 cd /app/src/RO.DevTest.Persistence
 
-sleep 10 
+sleep 15
 dotnet ef database update
 
 cd /app/src/RO.DevTest.WebApi
