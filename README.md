@@ -41,7 +41,10 @@ openssl pkcs12 -export -out jwt-key.pfx -inkey private_key.pem -in certificate.p
 
 ### 💾 Configuração da View para Análise de Dados
 
-> **Importante:** O endpoint `/admin/analysis` depende de uma view específica no banco de dados. Após configurar e executar a API pelo método de sua preferência (Docker ou local), você precisará executar o script SQL localizado na pasta `./Scripts/Views` na raiz do projeto. Este script criará a view necessária no PostgreSQL para garantir o funcionamento correto das análises de vendas.
+> **Importante:** Os endpoints de análises depende de uma view específica no banco de dados. Após configurar e 
+> executar a 
+> API pelo 
+> método de sua preferência (Docker ou local), você precisará executar o script SQL localizado na pasta `./Scripts/Views` na raiz do projeto. Este script criará a view necessária no PostgreSQL para garantir o funcionamento correto das análises de vendas.
 ### 🐋 Executando com Docker Compose
 
 **Docker:** o projeto está configurado para ser facilmente executado com Docker Compose.

@@ -42,7 +42,8 @@ public class RefreshTokenCommandHandler(
                 return Result<RefreshTokenResponse>.Success(new RefreshTokenResponse(
                     token,
                     refreshToken,
-                    DateTime.UtcNow.AddMinutes(15)), messages: "Novos tokens de autenticação.");
+                    DateTime.UtcNow.AddMinutes(15)), 
+                    messages: "Novos tokens de autenticação.");
             }
 
             return Result<RefreshTokenResponse>.Failure(messages: "Informações inválidas.");

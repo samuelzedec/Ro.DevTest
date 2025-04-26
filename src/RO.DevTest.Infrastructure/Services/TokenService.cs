@@ -45,7 +45,7 @@ public class TokenService(IOptions<JwtSettings> jwtSettings, IUserTokenRepositor
         if (refreshToken?.Value != refreshTokenCurrent)
             return false;
         
-        if (refreshToken?.ExpiresAt <= DateTime.UtcNow)
+        if (refreshToken.ExpiresAt <= DateTime.UtcNow)
             return false;
 
         return true;

@@ -11,7 +11,6 @@ namespace RO.DevTest.Application.Features.Auth.Commands.LoginCommand;
 public class LoginCommandHandler(
     IIdentityAbstractor identityAbstractor,
     ITokenService tokenService,
-    ICurrentUserService currentUserService,
     IValidator<LoginCommand> validator,
     ILogger<LoginCommandHandler> logger)
     : IRequestHandler<LoginCommand, Result<LoginResponse>>
@@ -34,14 +33,16 @@ public class LoginCommandHandler(
 
             if (user is null)
                 return Result<LoginResponse>.Failure(StatusCodes.Status404NotFound,
-                    messages: "Usuário não encontrado.");
+                    messages: "Usuário não encontrado");
 
             var validationPassword = await identityAbstractor.PasswordSignInAsync(user, request.Password);
             if (!validationPassword.Succeeded)
-                return Result<LoginResponse>.Failure(messages: "Email/usuário ou senha inválidos.");
+                return Result<LoginResponse>.Failure(messages: "Email/usuário ou senha inválidos");
 
-            var role = currentUserService.IsAdmin() ? "Admin" : "Customer";
+            var userRoles = await identityAbstractor.GetUserRolesAsync(user);
+            var role = userRoles.Contains("Admin") ? "Admin" : "Customer";
             user.Roles.Add(role);
+            
             var token = tokenService.GenerateAccessToken(user);
             var refreshToken = await tokenService.CreateRefreshTokenAsync(user);
 
@@ -51,7 +52,7 @@ public class LoginCommandHandler(
                 DateTime.UtcNow.AddMinutes(15),
                 role);
 
-            return Result<LoginResponse>.Success(response, messages: "Login realizado com sucesso.");
+            return Result<LoginResponse>.Success(response, messages: "Login realizado com sucesso");
         }
         catch (Exception ex)
         {
