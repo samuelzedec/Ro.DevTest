@@ -10,7 +10,6 @@ using RO.DevTest.Domain.Abstract;
 namespace RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 
 public class CreateProductCommandHandler(
-    IIdentityAbstractor identityAbstractor,
     IProductRepository productRepository,
     ICurrentUserService currentUserService,
     IValidator<CreateProductCommand> validator,
@@ -29,9 +28,8 @@ public class CreateProductCommandHandler(
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
 
-            var (userIsInvalid, errorMessage) = await EnsureUserIsAdminAsync(currentUserService.GetCurrentUserId());
-            if (userIsInvalid)
-                return Result<CreateProductResponse>.Failure(messages: errorMessage);
+            if (!currentUserService.IsAdmin())
+                return Result<CreateProductResponse>.Failure(StatusCodes.Status401Unauthorized, messages: "Apenas administradores podem criar produtos");
 
             var product = new Domain.Entities.Product
             {
@@ -55,17 +53,5 @@ public class CreateProductCommandHandler(
             return Result<CreateProductResponse>.Failure(StatusCodes.Status500InternalServerError,
                 "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
-    }
-
-    private async Task<(bool, string)> EnsureUserIsAdminAsync(string adminId)
-    {
-        var user = await identityAbstractor.FindUserByIdAsync(adminId);
-        if (user is null)
-            return (true, "Usuário não encontrado");
-
-        if (!currentUserService.IsAdmin())
-            return (true, "Apenas administradores podem criar produtos");
-
-        return (false, string.Empty);
     }
 }
