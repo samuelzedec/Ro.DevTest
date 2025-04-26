@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmail;
+namespace RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmailQuery;
 
 public class GetUserByNameOrEmailQueryValidator : AbstractValidator<GetUserByNameOrEmailQuery>
 {

@@ -33,7 +33,7 @@ public class UpdateUserCommandHandlerTests
         );
     }
 
-    [Fact(DisplayName = "Update User - Successfully update user details")]
+    [Fact(DisplayName = "Handle should successfully update user when provided with valid user information")]
     public async Task Handle_ValidUser_ShouldUpdateUserSuccessfully()
     {
         // Arrange
@@ -83,11 +83,12 @@ public class UpdateUserCommandHandlerTests
 
         //Assert
         result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
         result.StatusCode.Should().Be(StatusCodes.Status200OK);
         result.Message.Should().ContainSingle().Which.Should().Be("Dados atualizados com sucesso");
     }
 
-    [Fact(DisplayName = "Update User - Fail when user is not found")]
+    [Fact(DisplayName = "Handle should return failure result when attempting to update non-existent user")]
     public async Task Handle_UserNotFound_ShouldFailUpdate()
     {
         // Arrange
@@ -116,11 +117,12 @@ public class UpdateUserCommandHandlerTests
         
         // Assert
         result.IsSuccess.Should().BeFalse();
+        result.Data.Should().BeNull();
         result.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         result.Message.Should().ContainSingle().Which.Should().Be("Usuário não encontrado");
     }
 
-    [Fact(DisplayName = "Update User - Fail when email is already in use")]
+    [Fact(DisplayName = "Handle should return failure when attempting to update user with email already registered to another account")]
     public async Task Handle_EmailAlreadyExists_ShouldFailUpdate()
     {
         // Arrange
@@ -174,6 +176,7 @@ public class UpdateUserCommandHandlerTests
         
         // Assert
         result.IsSuccess.Should().BeFalse();
+        result.Data.Should().BeNull();
         result.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         result.Message.Should().ContainSingle().Which.Should().Be("Informações existentes");
     }

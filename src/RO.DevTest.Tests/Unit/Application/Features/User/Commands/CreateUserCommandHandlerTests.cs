@@ -72,6 +72,7 @@ public class CreateUserCommandHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
         result.StatusCode.Should().Be(StatusCodes.Status201Created);
         result.Message.Should().ContainSingle().Which.Should().Be("Usuário criado com sucesso");
     }
@@ -102,6 +103,8 @@ public class CreateUserCommandHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
+        result.Data.Should().BeNull();
+        result.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         result.Message.Should().ContainSingle().Which.Should().Be("As senhas não conferem");
     }
 
@@ -135,9 +138,10 @@ public class CreateUserCommandHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
+        result.Data.Should().BeNull();
         result.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
         result.Message.Should().ContainSingle().Which.Should()
-            .Be("No connection could be made because the target machine actively refused it.");
+            .Be("Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         
         _mockLogger.Verify(
             x => x.Log(

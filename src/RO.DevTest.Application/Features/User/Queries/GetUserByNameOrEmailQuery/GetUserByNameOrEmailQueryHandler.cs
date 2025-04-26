@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Domain.Abstract;
 
-namespace RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmail;
+namespace RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmailQuery;
 
 public class GetUserByNameOrEmailQueryHandler(
     IIdentityAbstractor identityAbstractor, 
