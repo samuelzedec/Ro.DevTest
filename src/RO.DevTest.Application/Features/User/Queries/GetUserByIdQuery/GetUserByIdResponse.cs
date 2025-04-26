@@ -1,6 +1,6 @@
-namespace RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmail;
+namespace RO.DevTest.Application.Features.User.Queries.GetUserByIdQuery;
 
-public record GetUserByNameOrEmailResponse
+public record GetUserByIdResponse
 {
     public Guid Id { get; init; }
     public string UserName { get; init; }
@@ -8,7 +8,7 @@ public record GetUserByNameOrEmailResponse
     public string Email { get; init; }
     public string Role { get; init; }
     
-    public GetUserByNameOrEmailResponse(Domain.Entities.Identity.User user) { 
+    public GetUserByIdResponse(Domain.Entities.Identity.User user) { 
         Id = user.Id;
         UserName = user.UserName!;
         Email = user.Email!;
