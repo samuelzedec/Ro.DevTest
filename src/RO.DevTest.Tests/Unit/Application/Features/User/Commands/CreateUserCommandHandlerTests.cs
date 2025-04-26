@@ -73,7 +73,7 @@ public class CreateUserCommandHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.StatusCode.Should().Be(StatusCodes.Status201Created);
-        result.Message.Should().ContainSingle().Which.Should().Be("User created successfully");
+        result.Message.Should().ContainSingle().Which.Should().Be("Usuário criado com sucesso");
     }
 
     [Fact(DisplayName = "Given passwords that don't match, you should fall for the first \"if\" of validation")]
