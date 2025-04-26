@@ -31,7 +31,7 @@ public class GetProductSalesByAdminQueryHandler(
 
             if (!currentUserService.IsAdmin())
                 return Result<List<GetProductSalesByAdminResponse>>.Failure(
-                    messages: "Only admins have access to this information.");
+                    messages: "Somente administradores têm acesso a essa informação.");
 
             request.StartDate ??= request.EndDate.HasValue 
                 ? DateTime.UtcNow.GetFirstDay(request.EndDate.Value.Year, request.EndDate.Value.Month)
@@ -44,19 +44,19 @@ public class GetProductSalesByAdminQueryHandler(
                     p.AdminId == Guid.Parse(currentUserService.GetCurrentUserId())
                     && p.TransactionDate >= request.StartDate
                     && p.TransactionDate <= request.EndDate)
+                .OrderBy(s => s.TransactionDate)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(s => new GetProductSalesByAdminResponse(s))
-                .OrderBy(s => s.TransactionDate)
                 .ToListAsync(cancellationToken);
 
-            return Result<List<GetProductSalesByAdminResponse>>.Success(sales, messages: "Sales Found");
+            return Result<List<GetProductSalesByAdminResponse>>.Success(sales, messages: "Vendas encontradas");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
             return Result<List<GetProductSalesByAdminResponse>>.Failure(StatusCodes.Status500InternalServerError,
-                ex.Message);
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

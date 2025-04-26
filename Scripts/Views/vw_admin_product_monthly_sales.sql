@@ -10,6 +10,7 @@ SELECT u.id                                   AS admin_id,
 FROM sale s
          INNER JOIN aspnet_user u ON s.admin_id = u.id
          INNER JOIN product p ON s.product_id = p.id
+WHERE s.deleted_at IS NULL
 GROUP BY u.id,
          u.user_name,
          p.id,

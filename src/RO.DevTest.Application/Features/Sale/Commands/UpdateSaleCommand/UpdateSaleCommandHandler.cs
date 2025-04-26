@@ -33,17 +33,18 @@ public class UpdateSaleCommandHandler(
                      && p.CustomerId == Guid.Parse(currentUserService.GetCurrentUserId()));
 
             if (sale is null)
-                return Result<UpdateSaleResponse>.Failure(messages: "Purchase not found");
+                return Result<UpdateSaleResponse>.Failure(messages: "Compra não encontrada");
 
             sale.PaymentMethod = request.PaymentMethod;
             sale.ModifiedOn = DateTime.Now;
             await saleRepository.UpdateAsync(sale, cancellationToken);
-            return Result<UpdateSaleResponse>.Success(new UpdateSaleResponse(sale), messages: "Updated purchase");
+            return Result<UpdateSaleResponse>.Success(new UpdateSaleResponse(sale), messages: "Compra atualizada");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<UpdateSaleResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<UpdateSaleResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

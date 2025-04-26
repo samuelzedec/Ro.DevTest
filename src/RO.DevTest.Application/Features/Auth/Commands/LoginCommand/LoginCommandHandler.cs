@@ -9,7 +9,7 @@ using RO.DevTest.Domain.Abstract;
 namespace RO.DevTest.Application.Features.Auth.Commands.LoginCommand;
 
 public class LoginCommandHandler(
-    IIdentityAbstractor identityAbstractor, 
+    IIdentityAbstractor identityAbstractor,
     ITokenService tokenService,
     ICurrentUserService currentUserService,
     IValidator<LoginCommand> validator,
@@ -28,16 +28,17 @@ public class LoginCommandHandler(
                 return Result<LoginResponse>.Failure(messages:
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
-            
+
             var user = await identityAbstractor.FindUserByEmailAsync(request.UsernameOrEmail)
                        ?? await identityAbstractor.FindUserByNameAsync(request.UsernameOrEmail);
 
             if (user is null)
-                return Result<LoginResponse>.Failure(StatusCodes.Status404NotFound, messages: "User not found");
-            
+                return Result<LoginResponse>.Failure(StatusCodes.Status404NotFound,
+                    messages: "Usuário não encontrado.");
+
             var validationPassword = await identityAbstractor.PasswordSignInAsync(user, request.Password);
             if (!validationPassword.Succeeded)
-                return Result<LoginResponse>.Failure(messages: "Invalid email/username or password");
+                return Result<LoginResponse>.Failure(messages: "Email/usuário ou senha inválidos.");
 
             var role = currentUserService.IsAdmin() ? "Admin" : "Customer";
             user.Roles.Add(role);
@@ -49,13 +50,15 @@ public class LoginCommandHandler(
                 refreshToken,
                 DateTime.UtcNow.AddMinutes(15),
                 role);
-            
-            return Result<LoginResponse>.Success(response, messages: "Login successfully");
+
+            return Result<LoginResponse>.Success(response, messages: "Login realizado com sucesso.");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<LoginResponse>.Failure(StatusCodes.Status500InternalServerError, messages: ex.Message);
+            return Result<LoginResponse>.Failure(
+                StatusCodes.Status500InternalServerError,
+                messages: "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

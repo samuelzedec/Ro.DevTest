@@ -29,19 +29,20 @@ public class GetSaleByIdQueryHandler(
                 .GetQueryable(
                     s => s.Id == request.SaleId && s.DeletedAt == null,
                     s => s.Product,
-                    s=> s.Customer,
+                    s => s.Customer,
                     s => s.Admin)
                 .FirstOrDefaultAsync(cancellationToken);
             
             if(sale is null)
-                return Result<GetSaleByIdResponse>.Failure(StatusCodes.Status404NotFound, messages: "Sale not found");
+                return Result<GetSaleByIdResponse>.Failure(StatusCodes.Status404NotFound, messages: "Venda não encontrada");
             
-            return Result<GetSaleByIdResponse>.Success(new GetSaleByIdResponse(sale), messages: "Sale found");
+            return Result<GetSaleByIdResponse>.Success(new GetSaleByIdResponse(sale), messages: "Venda encontrada");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<GetSaleByIdResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<GetSaleByIdResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

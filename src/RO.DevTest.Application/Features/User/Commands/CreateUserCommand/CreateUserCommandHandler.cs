@@ -45,12 +45,13 @@ public class CreateUserCommandHandler(
 
             var role = await identityAbstractor.GetUserRolesAsync(newUser);
             return Result<CreateUserResponse>.Success(
-                new CreateUserResponse(newUser, role.ToList().FirstOrDefault()!), StatusCodes.Status201Created, "User created successfully");
+                new CreateUserResponse(newUser, role.ToList().FirstOrDefault()!), StatusCodes.Status201Created, "Usuário criado com sucesso");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<CreateUserResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<CreateUserResponse>.Failure(StatusCodes.Status500InternalServerError,
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

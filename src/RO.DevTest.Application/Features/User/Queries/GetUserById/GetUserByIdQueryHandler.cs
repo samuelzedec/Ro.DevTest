@@ -19,17 +19,18 @@ public class GetUserByIdQueryHandler(
         {
             var user = await identityAbstractor.FindUserByIdAsync(currentUserService.GetCurrentUserId());
             if (user is null)
-                return Result<GetUserByIdResponse>.Failure(StatusCodes.Status404NotFound, "User not found");
+                return Result<GetUserByIdResponse>.Failure(StatusCodes.Status404NotFound, "Usuário não encontrado");
 
             var role = await identityAbstractor.GetUserRolesAsync(user);
             user.Roles = role.ToList();
 
-            return Result<GetUserByIdResponse>.Success(new GetUserByIdResponse(user), messages: "User found");
+            return Result<GetUserByIdResponse>.Success(new GetUserByIdResponse(user), messages: "Usuário encontrado");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<GetUserByIdResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<GetUserByIdResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

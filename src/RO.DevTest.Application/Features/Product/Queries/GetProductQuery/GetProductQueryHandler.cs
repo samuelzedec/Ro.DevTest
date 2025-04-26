@@ -30,14 +30,14 @@ public class GetProductQueryHandler(
                 a => a.Admin);
         
             if(product is null) 
-                return Result<GetProductResponse>.Failure(StatusCodes.Status404NotFound, "Product not found");
+                return Result<GetProductResponse>.Failure(StatusCodes.Status404NotFound, "Produto não encontrado");
         
-            return Result<GetProductResponse>.Success(new GetProductResponse(product), messages: "Product found");
+            return Result<GetProductResponse>.Success(new GetProductResponse(product), messages: "Produto encontrado");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<GetProductResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<GetProductResponse>.Failure(StatusCodes.Status500InternalServerError, "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

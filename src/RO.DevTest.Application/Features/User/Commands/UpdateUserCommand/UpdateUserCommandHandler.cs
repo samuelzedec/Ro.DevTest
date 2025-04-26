@@ -28,10 +28,10 @@ public class UpdateUserCommandHandler(
 
             var user = await identityAbstractor.FindUserByIdAsync(currentUserService.GetCurrentUserId());
             if (user is null)
-                return Result<UpdateUserResponse>.Failure(messages: "User not found");
+                return Result<UpdateUserResponse>.Failure(messages: "Usuário não encontrado");
 
             if (await ValitationRequestAsync(request))
-                return Result<UpdateUserResponse>.Failure(messages: "Existing information");
+                return Result<UpdateUserResponse>.Failure(messages: "Informações existentes");
 
             user.UserName = string.IsNullOrWhiteSpace(request.UserName) ? user.UserName : request.UserName;
             user.Name = string.IsNullOrWhiteSpace(request.Name) ? user.Name : request.Name;
@@ -39,12 +39,13 @@ public class UpdateUserCommandHandler(
 
             await identityAbstractor.UpdateUserAsync(user);
             return Result<UpdateUserResponse>.Success(new UpdateUserResponse(user),
-                messages: "Data updated successfully");
+                messages: "Dados atualizados com sucesso");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<UpdateUserResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<UpdateUserResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 
@@ -58,4 +59,4 @@ public class UpdateUserCommandHandler(
 
         return false;
     }
-} 
+}

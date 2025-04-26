@@ -32,7 +32,7 @@ public class RefreshTokenCommandHandler(
             if (user is null)
             {
                 return Result<RefreshTokenResponse>.Failure(StatusCodes.Status404NotFound,
-                    messages: "User not found");
+                    messages: "Usuário não encontrado.");
             }
 
             if (await tokenService.ValidationRefreshTokenAsync(user, request.RefreshToken))
@@ -42,15 +42,16 @@ public class RefreshTokenCommandHandler(
                 return Result<RefreshTokenResponse>.Success(new RefreshTokenResponse(
                     token,
                     refreshToken,
-                    DateTime.UtcNow.AddMinutes(15)), messages: "New authentication tokens");
+                    DateTime.UtcNow.AddMinutes(15)), messages: "Novos tokens de autenticação.");
             }
 
-            return Result<RefreshTokenResponse>.Failure(messages: "Invalid information");
+            return Result<RefreshTokenResponse>.Failure(messages: "Informações inválidas.");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<RefreshTokenResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<RefreshTokenResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                messages: "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

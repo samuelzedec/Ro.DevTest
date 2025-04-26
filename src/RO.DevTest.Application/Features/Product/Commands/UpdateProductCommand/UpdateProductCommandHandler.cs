@@ -33,7 +33,7 @@ public class UpdateProductCommandHandler(
                      && p.DeletedAt == null);
 
             if (product is null)
-                return Result<UpdateProductResponse>.Failure(messages: "Product not found or you do not have access");
+                return Result<UpdateProductResponse>.Failure(messages: "Produto não encontrado ou você não tem acesso");
 
             product.Name = string.IsNullOrWhiteSpace(request.Name) ? product.Name : request.Name;
             product.Description = string.IsNullOrWhiteSpace(request.Description) ? product.Description : request.Description;
@@ -42,12 +42,13 @@ public class UpdateProductCommandHandler(
             product.ModifiedOn = DateTime.UtcNow;
 
             await productRepository.UpdateAsync(product, cancellationToken);
-            return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product), messages: "Updated product");
+            return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product), messages: "Produto atualizado");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<UpdateProductResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<UpdateProductResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

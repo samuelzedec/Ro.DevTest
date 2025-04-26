@@ -21,7 +21,7 @@ public class AuthController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public IActionResult Authenticate()
-        => Ok(Result<dynamic>.Success(null, messages: "Authenticated"));
+        => Ok(Result<dynamic>.Success(null, messages: "Autenticado"));
     
     [HttpPost]
     [Route("login")]

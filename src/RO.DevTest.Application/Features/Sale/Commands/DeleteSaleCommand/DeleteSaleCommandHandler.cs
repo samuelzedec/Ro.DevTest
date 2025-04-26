@@ -1,3 +1,4 @@
+using System.Transactions;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,7 @@ namespace RO.DevTest.Application.Features.Sale.Commands.DeleteSaleCommand;
 
 public class DeleteSaleCommandHandler(
     ISaleRepository saleRepository,
+    IProductRepository productRepository,
     IValidator<DeleteSaleCommand> validator,
     ICurrentUserService currentUserService,
     ILogger<DeleteSaleCommandHandler> logger)
@@ -33,16 +35,35 @@ public class DeleteSaleCommandHandler(
                      && p.CustomerId == Guid.Parse(currentUserService.GetCurrentUserId()));
             
             if (sale is null)
-                return Result<DeleteSaleResponse>.Failure(messages: "Purchase not found");
+                return Result<DeleteSaleResponse>.Failure(messages: "Compra não encontrada.");
+
+            var product = await productRepository.GetAsync(
+                cancellationToken, 
+                p => p.Id == sale.ProductId
+                && p.DeletedAt == null);
+
+            if (product is null)
+                return Result<DeleteSaleResponse>.Failure(messages: "Você não pode excluir a compra porque o produto não está mais disponível.");
+ 
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                product.AvailableQuantity += sale.Quantity;
+                sale.Quantity = 0;
+                sale.DeletedAt = DateTime.Now;
+    
+                await saleRepository.UpdateAsync(sale, cancellationToken);
+                await productRepository.UpdateAsync(product, cancellationToken);
+    
+                transaction.Complete();
+            }
             
-            sale.DeletedAt = DateTime.Now;
-            await saleRepository.UpdateAsync(sale, cancellationToken);
-            return Result<DeleteSaleResponse>.Success(new DeleteSaleResponse(sale), messages: "Deleted purchase");
+            return Result<DeleteSaleResponse>.Success(new DeleteSaleResponse(sale), messages: "Compra excluída com sucesso.");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<DeleteSaleResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<DeleteSaleResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

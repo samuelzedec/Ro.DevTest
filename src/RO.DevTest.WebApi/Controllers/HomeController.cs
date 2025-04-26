@@ -15,5 +15,5 @@ public class HomeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [OpenApiOperation("Check Availability", "Confirms if the system is operational")]
     public IActionResult CheckAvailability()
-        => Ok(Result<dynamic>.Success(null, messages: "System is operational and responding normally"));
+        => Ok(Result<dynamic>.Success(null, messages: "O sistema está operacional e respondendo normalmente"));
 }
