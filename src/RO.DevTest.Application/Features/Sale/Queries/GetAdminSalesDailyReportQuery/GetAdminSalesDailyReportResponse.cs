@@ -1,6 +1,6 @@
-namespace RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetAdminSalesDailyReportQuery;
 
-public record GetProductSalesByAdminResponse
+public record GetAdminSalesDailyReportResponse
 {
     public string AdminUsername { get; init; }
     public Guid ProductId { get; init; }
@@ -10,7 +10,7 @@ public record GetProductSalesByAdminResponse
     public int TransactionCount { get; init; }
     public int TotalItemsSold { get; init; }
 
-    public GetProductSalesByAdminResponse(Domain.ReadModels.AdminSalesSummary adminSalesSummary)
+    public GetAdminSalesDailyReportResponse(Domain.ReadModels.AdminSalesSummary adminSalesSummary)
     {
         AdminUsername = adminSalesSummary.AdminUsername;
         ProductId = adminSalesSummary.ProductId;

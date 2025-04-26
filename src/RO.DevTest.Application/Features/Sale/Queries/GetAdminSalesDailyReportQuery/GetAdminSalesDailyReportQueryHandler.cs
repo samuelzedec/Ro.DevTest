@@ -8,16 +8,16 @@ using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Extensions;
 
-namespace RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetAdminSalesDailyReportQuery;
 
-public class GetProductSalesByAdminQueryHandler(
+public class GetAdminSalesDailyReportQueryHandler(
     IAdminSalesSummaryRepository adminSalesSummaryRepository,
     ICurrentUserService currentUserService,
-    IValidator<GetProductSalesByAdminQuery> validator,
-    ILogger<GetProductSalesByAdminQueryHandler> logger)
-    : IRequestHandler<GetProductSalesByAdminQuery, Result<List<GetProductSalesByAdminResponse>>>
+    IValidator<GetAdminSalesDailyReportQuery> validator,
+    ILogger<GetAdminSalesDailyReportQueryHandler> logger)
+    : IRequestHandler<GetAdminSalesDailyReportQuery, Result<List<GetAdminSalesDailyReportResponse>>>
 {
-    public async Task<Result<List<GetProductSalesByAdminResponse>>> Handle(GetProductSalesByAdminQuery request,
+    public async Task<Result<List<GetAdminSalesDailyReportResponse>>> Handle(GetAdminSalesDailyReportQuery request,
         CancellationToken cancellationToken)
     {
         try
@@ -25,12 +25,12 @@ public class GetProductSalesByAdminQueryHandler(
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                return Result<List<GetProductSalesByAdminResponse>>.Failure(messages:
+                return Result<List<GetAdminSalesDailyReportResponse>>.Failure(messages:
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
 
             if (!currentUserService.IsAdmin())
-                return Result<List<GetProductSalesByAdminResponse>>.Failure(
+                return Result<List<GetAdminSalesDailyReportResponse>>.Failure(
                     messages: "Somente administradores têm acesso a essa informação.");
 
             request.StartDate ??= request.EndDate.HasValue 
@@ -47,15 +47,15 @@ public class GetProductSalesByAdminQueryHandler(
                 .OrderBy(s => s.TransactionDate)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(s => new GetProductSalesByAdminResponse(s))
+                .Select(s => new GetAdminSalesDailyReportResponse(s))
                 .ToListAsync(cancellationToken);
 
-            return Result<List<GetProductSalesByAdminResponse>>.Success(sales, messages: "Vendas encontradas");
+            return Result<List<GetAdminSalesDailyReportResponse>>.Success(sales, messages: "Vendas encontradas");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<List<GetProductSalesByAdminResponse>>.Failure(StatusCodes.Status500InternalServerError,
+            return Result<List<GetAdminSalesDailyReportResponse>>.Failure(StatusCodes.Status500InternalServerError,
                 "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
