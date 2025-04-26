@@ -1,9 +1,9 @@
 using MediatR;
 using RO.DevTest.Domain.Abstract;
 
-namespace RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetAdminSalesDailyReportQuery;
 
-public record GetProductSalesByAdminQuery : IRequest<Result<List<GetProductSalesByAdminResponse>>>
+public record GetAdminSalesDailyReportQuery : IRequest<Result<List<GetAdminSalesDailyReportResponse>>>
 {
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }

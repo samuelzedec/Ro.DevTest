@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 using RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
-using RO.DevTest.Application.Features.User.Queries.GetUserById;
-using RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmail;
+using RO.DevTest.Application.Features.User.Queries.GetUserByIdQuery;
+using RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmailQuery;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Enums;
 

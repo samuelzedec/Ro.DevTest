@@ -9,10 +9,7 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICur
     public string GetCurrentUserId()
     {
         var userId = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userId))
-            throw new UnauthorizedAccessException("Usuário não autenticado");
-
-        return userId;
+        return userId ?? string.Empty;
     }
 
     public bool IsAdmin()

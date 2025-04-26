@@ -28,17 +28,17 @@ public class CreateSaleCommandHandler(
             }
 
             if (currentUserService.IsAdmin())
-                return Result<CreateSaleResponse>.Failure(messages: "Only customers can make purchases.");
+                return Result<CreateSaleResponse>.Failure(messages: "Somente clientes podem realizar compras.");
 
             var product = await productRepository.GetAsync(
                 cancellationToken,
                 p => p.Id == request.ProductId && p.DeletedAt == null);
 
             if (product is not { AvailableQuantity: > 0 })
-                return Result<CreateSaleResponse>.Failure(messages: "Product out of stock");
+                return Result<CreateSaleResponse>.Failure(messages: "Produto fora de estoque");
 
             if (product.AvailableQuantity < request.Quantity)
-                return Result<CreateSaleResponse>.Failure(messages: "Insufficient quantity available");
+                return Result<CreateSaleResponse>.Failure(messages: "Quantidade insuficiente disponível");
 
             var sale = new Domain.Entities.Sale
             {
@@ -62,12 +62,13 @@ public class CreateSaleCommandHandler(
             return Result<CreateSaleResponse>.Success(
                 new CreateSaleResponse(completeSale!),
                 StatusCodes.Status201Created,
-                messages: "Purchase successful");
+                messages: "Compra realizada com sucesso");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<CreateSaleResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<CreateSaleResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

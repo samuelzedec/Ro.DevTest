@@ -250,9 +250,23 @@ A API oferece um conjunto completo de endpoints para gerenciamento e análise de
    - Parâmetros de consulta: data inicial, data final
    - Retorno: Lista de vendas no período especificado
 
-7. **Análise de Vendas (Admin)** - `GET /v1/sales/admin/analysis`
-   - Fornece análise detalhada de vendas e produtos
-   - Requer autenticação (administrador)
-   - Parâmetros de consulta: período para análise
-   - Retorno: Dados analíticos sobre vendas, incluindo quantidade total, receita total e receita por produto
-   - **Nota**: Requer a view SQL mencionada anteriormente
+7. **Análise de Vendas (Admin)**
+   - **Visão Geral**: `GET /v1/sales/admin/analysis`
+      - Fornece análise detalhada de vendas agregadas por dia
+      - Requer autenticação (administrador)
+      - Parâmetros de consulta: período para análise (startDate, endDate), paginação (pageNumber, pageSize)
+      - Retorno: Lista de vendas diárias contendo quantidade total, receita total e detalhes de transações
+
+   - **Por Produto**: `GET /v1/sales/admin/analysis/product`
+      - Fornece análise detalhada de um produto específico
+      - Requer autenticação (administrador)
+      - Parâmetros de consulta: productId (obrigatório), período para análise (startDate, endDate)
+      - Retorno: Dados analíticos sobre o produto, incluindo nome, total de itens vendidos, valor total e quantidade de transações
+
+   - **Faturamento Total**: `GET /v1/sales/admin/revenue/total`
+      - Fornece o faturamento consolidado de todos os produtos
+      - Requer autenticação (administrador)
+      - Parâmetros de consulta: período para análise (startDate, endDate)
+      - Retorno: Dados agregados incluindo valor total, quantidade de itens, número de transações e lista dos 5 produtos mais vendidos no período
+
+   - **Nota**: Todos os endpoints necessitam da view SQL `vw_admin_product_monthly_sales` para funcionamento correto

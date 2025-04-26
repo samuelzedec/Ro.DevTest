@@ -30,7 +30,7 @@ public class GetMyPurchasesQueryHandler(
             }
 
             if (currentUserService.IsAdmin())
-                return Result<List<GetMyPurchasesResponse>>.Failure(messages: "Only customers have purchases");
+                return Result<List<GetMyPurchasesResponse>>.Failure(messages: "Somente clientes têm compras");
 
             request.StartDate ??= request.EndDate.HasValue
                 ? DateTime.UtcNow.GetFirstDay(request.EndDate.Value.Year, request.EndDate.Value.Month)
@@ -45,18 +45,19 @@ public class GetMyPurchasesQueryHandler(
                            && s.TransactionDate >= request.StartDate
                            && s.TransactionDate <= request.EndDate,
                     s => s.Product)
+                .OrderBy(s => s.TransactionDate)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(s => new GetMyPurchasesResponse(s))
-                .OrderBy(s => s.TransactionDate)
                 .ToListAsync(cancellationToken);
 
-            return Result<List<GetMyPurchasesResponse>>.Success(sales, messages: "Purchases found");
+            return Result<List<GetMyPurchasesResponse>>.Success(sales, messages: "Compras encontradas");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<List<GetMyPurchasesResponse>>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<List<GetMyPurchasesResponse>>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

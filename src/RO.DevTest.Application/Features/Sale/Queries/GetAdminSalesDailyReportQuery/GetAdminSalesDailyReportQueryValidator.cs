@@ -1,11 +1,10 @@
 using FluentValidation;
-using RO.DevTest.Domain.Extensions;
 
-namespace RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetAdminSalesDailyReportQuery;
 
-public class GetProductSalesByAdminQueryValidator : AbstractValidator<GetProductSalesByAdminQuery>
+public class GetAdminSalesDailyReportQueryValidator : AbstractValidator<GetAdminSalesDailyReportQuery>
 {
-    public GetProductSalesByAdminQueryValidator()
+    public GetAdminSalesDailyReportQueryValidator()
     {
         When(s => s.StartDate.HasValue, () =>
         {

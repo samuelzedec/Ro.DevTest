@@ -32,7 +32,7 @@ public class CreateProductCommandHandler(
             var (userIsInvalid, errorMessage) = await EnsureUserIsAdminAsync(currentUserService.GetCurrentUserId());
             if (userIsInvalid)
                 return Result<CreateProductResponse>.Failure(messages: errorMessage);
-            
+
             var product = new Domain.Entities.Product
             {
                 AdminId = Guid.Parse(currentUserService.GetCurrentUserId()),
@@ -45,14 +45,15 @@ public class CreateProductCommandHandler(
 
             await productRepository.CreateAsync(product, cancellationToken);
             return Result<CreateProductResponse>.Success(
-                new CreateProductResponse(product), 
-                StatusCodes.Status201Created, 
-                "Product created");
+                new CreateProductResponse(product),
+                StatusCodes.Status201Created,
+                "Produto criado com sucesso");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<CreateProductResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<CreateProductResponse>.Failure(StatusCodes.Status500InternalServerError,
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 
@@ -60,10 +61,10 @@ public class CreateProductCommandHandler(
     {
         var user = await identityAbstractor.FindUserByIdAsync(adminId);
         if (user is null)
-            return (true, "User not found");
-        
+            return (true, "Usuário não encontrado");
+
         if (!currentUserService.IsAdmin())
-            return (true, "Only administrators can create products");
+            return (true, "Apenas administradores podem criar produtos");
 
         return (false, string.Empty);
     }

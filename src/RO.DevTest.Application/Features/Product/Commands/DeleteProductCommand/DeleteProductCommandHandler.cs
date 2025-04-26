@@ -33,16 +33,17 @@ public class DeleteProductCommandHandler(
                      && p.AdminId == Guid.Parse(currentUserService.GetCurrentUserId()));
 
             if (product is null)
-                return Result<DeleteProductResponse>.Failure(StatusCodes.Status404NotFound, messages: "Product not found");
+                return Result<DeleteProductResponse>.Failure(StatusCodes.Status404NotFound, messages: "Produto não encontrado");
             
             product.DeletedAt = DateTime.UtcNow;
             await productRepository.UpdateAsync(product, cancellationToken);
-            return Result<DeleteProductResponse>.Success(new DeleteProductResponse(product), messages: "Product found");
+            return Result<DeleteProductResponse>.Success(new DeleteProductResponse(product), messages: "Produto deletado com sucesso");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<DeleteProductResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<DeleteProductResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

@@ -8,16 +8,16 @@ using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Extensions;
 
-namespace RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetAdminSalesDailyReportQuery;
 
-public class GetProductSalesByAdminQueryHandler(
+public class GetAdminSalesDailyReportQueryHandler(
     IAdminSalesSummaryRepository adminSalesSummaryRepository,
     ICurrentUserService currentUserService,
-    IValidator<GetProductSalesByAdminQuery> validator,
-    ILogger<GetProductSalesByAdminQueryHandler> logger)
-    : IRequestHandler<GetProductSalesByAdminQuery, Result<List<GetProductSalesByAdminResponse>>>
+    IValidator<GetAdminSalesDailyReportQuery> validator,
+    ILogger<GetAdminSalesDailyReportQueryHandler> logger)
+    : IRequestHandler<GetAdminSalesDailyReportQuery, Result<List<GetAdminSalesDailyReportResponse>>>
 {
-    public async Task<Result<List<GetProductSalesByAdminResponse>>> Handle(GetProductSalesByAdminQuery request,
+    public async Task<Result<List<GetAdminSalesDailyReportResponse>>> Handle(GetAdminSalesDailyReportQuery request,
         CancellationToken cancellationToken)
     {
         try
@@ -25,13 +25,13 @@ public class GetProductSalesByAdminQueryHandler(
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                return Result<List<GetProductSalesByAdminResponse>>.Failure(messages:
+                return Result<List<GetAdminSalesDailyReportResponse>>.Failure(messages:
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
 
             if (!currentUserService.IsAdmin())
-                return Result<List<GetProductSalesByAdminResponse>>.Failure(
-                    messages: "Only admins have access to this information.");
+                return Result<List<GetAdminSalesDailyReportResponse>>.Failure(
+                    messages: "Somente administradores têm acesso a essa informação.");
 
             request.StartDate ??= request.EndDate.HasValue 
                 ? DateTime.UtcNow.GetFirstDay(request.EndDate.Value.Year, request.EndDate.Value.Month)
@@ -44,19 +44,19 @@ public class GetProductSalesByAdminQueryHandler(
                     p.AdminId == Guid.Parse(currentUserService.GetCurrentUserId())
                     && p.TransactionDate >= request.StartDate
                     && p.TransactionDate <= request.EndDate)
+                .OrderBy(s => s.TransactionDate)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(s => new GetProductSalesByAdminResponse(s))
-                .OrderBy(s => s.TransactionDate)
+                .Select(s => new GetAdminSalesDailyReportResponse(s))
                 .ToListAsync(cancellationToken);
 
-            return Result<List<GetProductSalesByAdminResponse>>.Success(sales, messages: "Sales Found");
+            return Result<List<GetAdminSalesDailyReportResponse>>.Success(sales, messages: "Vendas encontradas");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<List<GetProductSalesByAdminResponse>>.Failure(StatusCodes.Status500InternalServerError,
-                ex.Message);
+            return Result<List<GetAdminSalesDailyReportResponse>>.Failure(StatusCodes.Status500InternalServerError,
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }

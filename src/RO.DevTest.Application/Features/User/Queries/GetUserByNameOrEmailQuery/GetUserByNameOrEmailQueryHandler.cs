@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Domain.Abstract;
 
-namespace RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmail;
+namespace RO.DevTest.Application.Features.User.Queries.GetUserByNameOrEmailQuery;
 
 public class GetUserByNameOrEmailQueryHandler(
     IIdentityAbstractor identityAbstractor, 
@@ -28,17 +28,18 @@ public class GetUserByNameOrEmailQueryHandler(
                        ?? await identityAbstractor.FindUserByEmailAsync(request.NameOrEmail);
             
             if (user is null)
-                return Result<GetUserByNameOrEmailResponse>.Failure(StatusCodes.Status404NotFound, "User not found");
+                return Result<GetUserByNameOrEmailResponse>.Failure(StatusCodes.Status404NotFound, "Usuário não encontrado");
 
             var role = await identityAbstractor.GetUserRolesAsync(user);
             user.Roles = role.ToList();
 
-            return Result<GetUserByNameOrEmailResponse>.Success(new GetUserByNameOrEmailResponse(user), messages: "User found");
+            return Result<GetUserByNameOrEmailResponse>.Success(new GetUserByNameOrEmailResponse(user), messages: "Usuário encontrado");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<GetUserByNameOrEmailResponse>.Failure(StatusCodes.Status500InternalServerError, ex.Message);
+            return Result<GetUserByNameOrEmailResponse>.Failure(StatusCodes.Status500InternalServerError, 
+                "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
 }
