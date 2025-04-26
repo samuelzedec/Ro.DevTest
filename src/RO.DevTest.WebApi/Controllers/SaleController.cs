@@ -7,6 +7,7 @@ using RO.DevTest.Application.Features.Sale.Commands.CreateSaleCommand;
 using RO.DevTest.Application.Features.Sale.Commands.DeleteSaleCommand;
 using RO.DevTest.Application.Features.Sale.Commands.UpdateSaleCommand;
 using RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
+using RO.DevTest.Application.Features.Sale.Queries.GetProductRevenueByIdQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetProductSalesByAdminQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetSaleByIdQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetSalesByPeriodQuery;
@@ -126,6 +127,21 @@ public class SaleController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(Result<List<GetProductSalesByAdminResponse>>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetSalesAnalisys(
         [FromQuery] GetProductSalesByAdminQuery request,
+        CancellationToken cancellationToken)
+    {
+        var response = await mediator.Send(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("admin/analysis/product")]
+    [ActionName("GetSalesAnalisys")]
+    [ProducesResponseType(typeof(Result<GetProductRevenueByIdResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Result<GetProductRevenueByIdResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<GetProductRevenueByIdResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetSalesAnalisysProduct(
+        [FromQuery] GetProductRevenueByIdQuery request,
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);
