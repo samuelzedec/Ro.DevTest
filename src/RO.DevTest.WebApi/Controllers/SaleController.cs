@@ -8,7 +8,7 @@ using RO.DevTest.Application.Features.Sale.Commands.DeleteSaleCommand;
 using RO.DevTest.Application.Features.Sale.Commands.UpdateSaleCommand;
 using RO.DevTest.Application.Features.Sale.Queries.GetAdminSalesDailyReportQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetMyPurchasesQuery;
-using RO.DevTest.Application.Features.Sale.Queries.GetProductRevenueByIdQuery;
+using RO.DevTest.Application.Features.Sale.Queries.GetProductsRevenueQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetSaleByIdQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetSalesByPeriodQuery;
 using RO.DevTest.Application.Features.Sale.Queries.GetTotalRevenueQuery;
@@ -136,14 +136,14 @@ public class SaleController(IMediator mediator) : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [Route("admin/analysis/product")]
+    [Route("admin/analysis/products")]
     [ActionName("GetProductSalesAnalysis")]
-    [ProducesResponseType(typeof(Result<GetProductRevenueByIdResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Result<GetProductRevenueByIdResponse>), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(Result<GetProductRevenueByIdResponse>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Result<GetProductRevenueByIdResponse>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetProductSalesAnalysis(
-        [FromQuery] GetProductRevenueByIdQuery request,
+    [ProducesResponseType(typeof(Result<List<GetProductsRevenueResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result<List<GetProductsRevenueResponse>>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Result<List<GetProductsRevenueResponse>>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Result<List<GetProductsRevenueResponse>>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetProductsSalesAnalysis(
+        [FromQuery] GetProductsRevenueQuery request,
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);

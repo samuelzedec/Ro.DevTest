@@ -252,15 +252,15 @@ A API oferece um conjunto completo de endpoints para gerenciamento e análise de
 
 7. **Análise de Vendas (Admin)**
    - **Visão Geral**: `GET /v1/sales/admin/analysis`
-      - Fornece análise detalhada de vendas agregadas por dia
+      - Fornece análise detalhada de vendas agregadas por dia e por produto
       - Requer autenticação (administrador)
       - Parâmetros de consulta: período para análise (startDate, endDate), paginação (pageNumber, pageSize)
       - Retorno: Lista de vendas diárias contendo quantidade total, receita total e detalhes de transações
 
-   - **Por Produto**: `GET /v1/sales/admin/analysis/product`
-      - Fornece análise detalhada de um produto específico
+   - **Por Produto**: `GET /v1/sales/admin/analysis/products`
+      - Fornece análise detalhada dos produtos vendidos
       - Requer autenticação (administrador)
-      - Parâmetros de consulta: productId (obrigatório), período para análise (startDate, endDate)
+      - Parâmetros de consulta: período para análise (startDate, endDate)
       - Retorno: Dados analíticos sobre o produto, incluindo nome, total de itens vendidos, valor total e quantidade de transações
 
    - **Faturamento Total**: `GET /v1/sales/admin/revenue/total`
