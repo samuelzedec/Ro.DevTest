@@ -1,17 +1,11 @@
 using FluentValidation;
 
-namespace RO.DevTest.Application.Features.Sale.Queries.GetProductRevenueByIdQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetProductsRevenueQuery;
 
-public class GetProductRevenueByIdQueryValidator : AbstractValidator<GetProductRevenueByIdQuery>
+public class GetProductsRevenueQueryValidator : AbstractValidator<GetProductsRevenueQuery>
 {
-    public GetProductRevenueByIdQueryValidator()
+    public GetProductsRevenueQueryValidator()
     {
-        RuleFor(x => x.ProductId)
-            .NotEmpty()
-            .WithMessage("O Id do produto é obrigatório")
-            .Must(BeValidGuid)
-            .WithMessage("O Id do produto deve ser um GUID válido");
-        
         When(s => s.StartDate.HasValue, () =>
         {
             RuleFor(s => s.EndDate)

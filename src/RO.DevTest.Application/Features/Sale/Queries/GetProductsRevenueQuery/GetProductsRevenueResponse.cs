@@ -1,6 +1,6 @@
-namespace RO.DevTest.Application.Features.Sale.Queries.GetProductRevenueByIdQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetProductsRevenueQuery;
 
-public record GetProductRevenueByIdResponse
+public record GetProductsRevenueResponse
 {
     public string AdminUsername { get; init; } = string.Empty;
     public string ProductName { get; init; } = string.Empty;

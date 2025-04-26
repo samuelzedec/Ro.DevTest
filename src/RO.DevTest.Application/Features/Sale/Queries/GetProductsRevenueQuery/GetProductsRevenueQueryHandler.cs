@@ -8,28 +8,28 @@ using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Extensions;
 
-namespace RO.DevTest.Application.Features.Sale.Queries.GetProductRevenueByIdQuery;
+namespace RO.DevTest.Application.Features.Sale.Queries.GetProductsRevenueQuery;
 
-public class GetProductRevenueByIdQueryHandler(
+public class GetProductsRevenueQueryHandler(
     IAdminSalesSummaryRepository adminSalesSummaryRepository,
     ICurrentUserService currentUserService,
-    IValidator<GetProductRevenueByIdQuery> validator,
-    ILogger<GetProductRevenueByIdQueryHandler> logger)
-    : IRequestHandler<GetProductRevenueByIdQuery, Result<GetProductRevenueByIdResponse>>
+    IValidator<GetProductsRevenueQuery> validator,
+    ILogger<GetProductsRevenueQueryHandler> logger)
+    : IRequestHandler<GetProductsRevenueQuery, Result<List<GetProductsRevenueResponse>>>
 {
-    public async Task<Result<GetProductRevenueByIdResponse>> Handle(GetProductRevenueByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<GetProductsRevenueResponse>>> Handle(GetProductsRevenueQuery request, CancellationToken cancellationToken)
     {
         try
         {
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                return Result<GetProductRevenueByIdResponse>.Failure(messages:
+                return Result<List<GetProductsRevenueResponse>>.Failure(messages:
                     validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
             }
 
             if (!currentUserService.IsAdmin())
-                return Result<GetProductRevenueByIdResponse>.Failure(
+                return Result<List<GetProductsRevenueResponse>>.Failure(
                     messages: "Somente administradores têm acesso a essa informação.");
             
             request.StartDate ??= request.EndDate.HasValue 
@@ -38,14 +38,13 @@ public class GetProductRevenueByIdQueryHandler(
             
             request.EndDate ??= DateTime.UtcNow.GetLastDay();
 
-            var sale = await adminSalesSummaryRepository
+            var sales = await adminSalesSummaryRepository
                 .GetQueryable(p =>
                     p.AdminId == Guid.Parse(currentUserService.GetCurrentUserId())
-                    && p.ProductId == request.ProductId
                     && p.TransactionDate >= request.StartDate
                     && p.TransactionDate <= request.EndDate)
                 .GroupBy(s => new { s.ProductId, s.ProductName, s.AdminUsername })
-                .Select(g => new GetProductRevenueByIdResponse
+                .Select(g => new GetProductsRevenueResponse
                 {
                     AdminUsername = g.Key.AdminUsername,
                     ProductName = g.Key.ProductName,
@@ -54,18 +53,18 @@ public class GetProductRevenueByIdQueryHandler(
                     TransactionCount = g.Count(),
                     StartDate = request.StartDate,
                     EndDate = request.EndDate
-                }).FirstOrDefaultAsync(cancellationToken);
+                }).ToListAsync(cancellationToken);
 
-            if (sale is null)
-                return Result<GetProductRevenueByIdResponse>.Failure(StatusCodes.Status404NotFound, 
+            if (sales.Count is 0)
+                return Result<List<GetProductsRevenueResponse>>.Failure(StatusCodes.Status404NotFound, 
                     "Não foram encontradas vendas para este produto no período especificado ou o produto não existe");
             
-            return Result<GetProductRevenueByIdResponse>.Success(sale, messages: "Relatório da venda desse produto");
+            return Result<List<GetProductsRevenueResponse>>.Success(sales, messages: "Relatório da venda dos produtos");
         }
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return Result<GetProductRevenueByIdResponse>.Failure(StatusCodes.Status500InternalServerError,
+            return Result<List<GetProductsRevenueResponse>>.Failure(StatusCodes.Status500InternalServerError,
                 "Ocorreu um erro inesperado, consulte o arquivo de hoje na pasta Logs");
         }
     }
