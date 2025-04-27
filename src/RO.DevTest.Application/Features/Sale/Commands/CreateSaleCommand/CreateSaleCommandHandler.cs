@@ -52,6 +52,7 @@ public class CreateSaleCommandHandler(
             await saleRepository.CreateAsync(sale, cancellationToken);
             product.AvailableQuantity -= request.Quantity;
             await productRepository.UpdateAsync(product, cancellationToken);
+            
             var completeSale = await saleRepository.GetAsync(
                 cancellationToken,
                 s => s.Id == sale.Id,

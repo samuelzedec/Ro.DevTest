@@ -35,7 +35,7 @@ public class DeleteSaleCommandHandler(
                      && p.CustomerId == Guid.Parse(currentUserService.GetCurrentUserId()));
             
             if (sale is null)
-                return Result<DeleteSaleResponse>.Failure(messages: "Compra não encontrada.");
+                return Result<DeleteSaleResponse>.Failure(StatusCodes.Status404NotFound, messages: "Compra não encontrada.");
 
             var product = await productRepository.GetAsync(
                 cancellationToken, 
@@ -43,7 +43,7 @@ public class DeleteSaleCommandHandler(
                 && p.DeletedAt == null);
 
             if (product is null)
-                return Result<DeleteSaleResponse>.Failure(messages: "Você não pode excluir a compra porque o produto não está mais disponível.");
+                return Result<DeleteSaleResponse>.Failure(StatusCodes.Status404NotFound, messages: "Você não pode excluir a compra porque o produto não está mais disponível.");
  
             using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
