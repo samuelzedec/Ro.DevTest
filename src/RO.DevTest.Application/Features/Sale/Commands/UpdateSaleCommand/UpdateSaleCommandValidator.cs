@@ -12,7 +12,7 @@ public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
         
         RuleFor(s => s.EPaymentMethod)
             .NotNull()
-            .WithMessage("O método de pagamento é obrigastório")
+            .WithMessage("O método de pagamento é obrigatório")
             .IsInEnum()
             .WithMessage("Método de pagamento inválido");
     }

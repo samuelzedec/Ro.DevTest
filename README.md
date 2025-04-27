@@ -1,6 +1,6 @@
-# API de E-commerce - Teste Técnico Rota das Oficinas
+**# API de E-commerce - Teste Técnico Rota das Oficinas
 
-Olá! Me chamo Samuel Ribeiro e quero apresentar minha solução para o teste técnico da Rota das Oficinas: uma API de e-commerce em .NET 8 que gerencia clientes, produtos e vendas com autenticação JWT, paginação avançada e análise de dados. Implementei testes unitários abrangentes e segui as melhores práticas de arquitetura, garantindo código limpo e funcional para todos os requisitos solicitados.
+Olá! Me chamo Samuel Ribeiro e quero apresentar minha solução para o teste técnico da Rota das Oficinas: uma API de e-commerce em .NET 8 que gerencia clientes, produtos e vendas com autenticação JWT, paginação e análise de dados. Implementei testes unitários abrangentes e segui as melhores práticas de arquitetura, garantindo código limpo e funcional para todos os requisitos solicitados.
 
 ## Executando a API
 
@@ -56,9 +56,11 @@ openssl pkcs12 -export -out jwt-key.pfx -inkey private_key.pem -in certificate.p
 
 2. Commando para rodar a API com o Docker Compose
 ```bash
-"Windows:" docker-compose up -d
-"Linux Ubuntu:" docker compose up -d
+"Windows:" docker-compose up --build -d
+"Linux Ubuntu:" docker compose up --build -d
 ```
+> **Nota:** Após o container da WebApi rodar é necessário esperar cerca de 10 segundos para aplicação dentro do 
+> container iniciar, por causa do `sleep 10` no entrypoint.sh
 
 ### ⚙️ Executando Localmente (Sem Docker Compose)
 
@@ -275,4 +277,4 @@ A API oferece um conjunto completo de endpoints para gerenciamento e análise de
       - Parâmetros de consulta: período para análise (startDate, endDate)
       - Retorno: Dados agregados incluindo valor total, quantidade de itens, número de transações e lista dos 5 produtos mais vendidos no período
 
-   - **Nota**: Todos os endpoints necessitam da view SQL `vw_admin_product_monthly_sales` para funcionamento correto
+   - **Nota**: Todos os endpoints necessitam da view SQL `vw_admin_product_monthly_sales` para funcionamento correto**

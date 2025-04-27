@@ -33,7 +33,7 @@ public class UpdateSaleCommandHandler(
                      && p.CustomerId == Guid.Parse(currentUserService.GetCurrentUserId()));
 
             if (sale is null)
-                return Result<UpdateSaleResponse>.Failure(messages: "Compra não encontrada");
+                return Result<UpdateSaleResponse>.Failure(StatusCodes.Status404NotFound ,messages: "Compra não encontrada");
 
             sale.EPaymentMethod = request.EPaymentMethod;
             sale.ModifiedOn = DateTime.Now;
