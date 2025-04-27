@@ -17,7 +17,7 @@ public class Sale : BaseEntity
     public User Customer { get; set; } = null!;
 
     public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
-    public PaymentMethod PaymentMethod { get; set; }
+    public EPaymentMethod EPaymentMethod { get; set; }
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     [NotMapped] public decimal TotalPrice => UnitPrice * Quantity;

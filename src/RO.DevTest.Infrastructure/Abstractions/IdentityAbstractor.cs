@@ -73,7 +73,7 @@ public class IdentityAbstractor(
     public async Task<IList<string>> GetUserRolesAsync(User user) 
         => await userManager.GetRolesAsync(user);
 
-    public async Task<IdentityResult> AddToRoleAsync(User user, UserRoles role)
+    public async Task<IdentityResult> AddToRoleAsync(User user, EUserRoles role)
     {
         if (await roleManager.RoleExistsAsync(role.ToString()) is false)
             await roleManager.CreateAsync(new Role { Name = role.ToString() });

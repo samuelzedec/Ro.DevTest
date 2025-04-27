@@ -43,7 +43,7 @@ public class CreateUserCommandHandlerTests
             new Faker().Internet.Email(),
             password,
             password
-        ) { Role = UserRoles.Admin };
+        ) { Role = EUserRoles.Admin };
 
         _mockValidator
             .Setup(va => va.ValidateAsync(
@@ -60,7 +60,7 @@ public class CreateUserCommandHandlerTests
         _mockIdentityAbstractor
             .Setup(id => id.AddToRoleAsync(
                 It.IsAny<Domain.Entities.Identity.User>(),
-                It.IsAny<UserRoles>()))
+                It.IsAny<EUserRoles>()))
             .ReturnsAsync(Microsoft.AspNetCore.Identity.IdentityResult.Success);
 
         _mockIdentityAbstractor
@@ -87,16 +87,16 @@ public class CreateUserCommandHandlerTests
             new Faker().Internet.Email(),
             new Faker().Internet.Password(),
             new Faker().Internet.Password()
-        ) { Role = UserRoles.Admin };
+        ) { Role = EUserRoles.Admin };
 
-        List<ValidationFailure> validationFailures = [new("PasswordConfirmation", "As senhas não conferem")];
-        var validationResult = new FluentValidation.Results.ValidationResult(validationFailures);
+        List<ValidationFailure> validationFailures = 
+            [new("PasswordConfirmation", "As senhas não conferem")];
 
         _mockValidator
             .Setup(va => va.ValidateAsync(
                 It.IsAny<CreateUserCommand>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult(validationFailures));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -119,7 +119,7 @@ public class CreateUserCommandHandlerTests
             new Faker().Internet.Email(),
             password,
             password
-        ) { Role = UserRoles.Admin };
+        ) { Role = EUserRoles.Admin };
 
         _mockValidator
             .Setup(va => va.ValidateAsync(

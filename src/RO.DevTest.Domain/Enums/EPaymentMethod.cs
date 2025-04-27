@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace RO.DevTest.Domain.Enums;
 
-public enum PaymentMethod
+public enum EPaymentMethod
 {
     [Description("Dinheiro")]
     Cash = 1,

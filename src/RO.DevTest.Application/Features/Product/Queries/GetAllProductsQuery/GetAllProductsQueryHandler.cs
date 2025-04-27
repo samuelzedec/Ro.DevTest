@@ -35,10 +35,10 @@ public class GetAllProductsQueryHandler(
                     p => p.Admin);
 
             if (request.Category.HasValue)
-                query = query.Where(p => p.ProductCategory == request.Category.Value);
+                query = query.Where(p => p.EProductCategory == request.Category.Value);
 
             var paginatedProducts = await query
-                .OrderBy(p => p.ProductCategory)
+                .OrderBy(p => p.EProductCategory)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(p => new GetAllProductsResponse(p))

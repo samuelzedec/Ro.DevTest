@@ -6,6 +6,6 @@ namespace RO.DevTest.Application.Features.Sale.Commands.CreateSaleCommand;
 
 public record CreateSaleCommand(
     Guid ProductId,
-    PaymentMethod PaymentMethod,
+    EPaymentMethod EPaymentMethod,
     int Quantity
 ) : IRequest<Result<CreateSaleResponse>>;

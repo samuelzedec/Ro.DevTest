@@ -35,7 +35,7 @@ public class UpdateSaleCommandHandler(
             if (sale is null)
                 return Result<UpdateSaleResponse>.Failure(messages: "Compra não encontrada");
 
-            sale.PaymentMethod = request.PaymentMethod;
+            sale.EPaymentMethod = request.EPaymentMethod;
             sale.ModifiedOn = DateTime.Now;
             await saleRepository.UpdateAsync(sale, cancellationToken);
             return Result<UpdateSaleResponse>.Success(new UpdateSaleResponse(sale), messages: "Compra atualizada");

@@ -110,14 +110,14 @@ public class GetUserByNameOrEmailQueryHandlerTests
         // Arrange
         var query = new GetUserByNameOrEmailQuery(string.Empty);
         
-        List<ValidationFailure> validationFailures = [new("NameOrEmail", "O campo Nome/Email é obrigatório")];
-        var validationResult = new FluentValidation.Results.ValidationResult(validationFailures);
+        List<ValidationFailure> validationFailures = 
+            [new("NameOrEmail", "O campo Nome/Email é obrigatório")];
 
         _mockValidator
             .Setup(va => va.ValidateAsync(
                 It.IsAny<GetUserByNameOrEmailQuery>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult(validationFailures));
         
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

@@ -28,7 +28,7 @@ public class UsersController(IMediator mediator) : ControllerBase
         [FromBody] CreateUserCommand request,
         CancellationToken cancellationToken)
     {
-        request.Role = UserRoles.Admin;
+        request.Role = EUserRoles.Admin;
         var response = await mediator.Send(request, cancellationToken);
         if (response.StatusCode is StatusCodes.Status400BadRequest)
             return BadRequest(response);
@@ -49,7 +49,7 @@ public class UsersController(IMediator mediator) : ControllerBase
         [FromBody] CreateUserCommand request,
         CancellationToken cancellationToken)
     {
-        request.Role = UserRoles.Customer;
+        request.Role = EUserRoles.Customer;
         var response = await mediator.Send(request, cancellationToken);
         if (response.StatusCode is StatusCodes.Status400BadRequest)
             return BadRequest(response);

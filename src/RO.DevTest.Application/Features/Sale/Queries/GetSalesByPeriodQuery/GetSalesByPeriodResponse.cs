@@ -21,7 +21,7 @@ public record GetSalesByPeriodResponse
         ProductName = sale.Product.Name;
         CustomerName = sale.Customer.Name;
         TransactionDate = sale.TransactionDate;
-        PaymentMethod = sale.PaymentMethod.GetDescription();
+        PaymentMethod = sale.EPaymentMethod.GetDescription();
         QuantityPurchased = sale.Quantity;
         UnitPrice = sale.UnitPrice;
         TotalPrice = sale.TotalPrice;

@@ -23,7 +23,7 @@ public record GetSaleByIdResponse
         CustomerName = sale.Customer.Name;
         CustomerEmail = sale.Customer.Email!;
         TransactionDate = sale.TransactionDate;
-        PaymentMethod = sale.PaymentMethod.GetDescription();
+        PaymentMethod = sale.EPaymentMethod.GetDescription();
         QuantityPurchased = sale.Quantity;
         UnitPrice = sale.UnitPrice;
         TotalPrice = sale.TotalPrice;

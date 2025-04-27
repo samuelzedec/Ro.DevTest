@@ -45,7 +45,7 @@ public class CreateSaleCommandHandler(
                 AdminId = product.AdminId,
                 ProductId = product.Id,
                 CustomerId = Guid.Parse(currentUserService.GetCurrentUserId()),
-                PaymentMethod = request.PaymentMethod,
+                EPaymentMethod = request.EPaymentMethod,
                 Quantity = request.Quantity,
                 UnitPrice = product.UnitPrice
             };

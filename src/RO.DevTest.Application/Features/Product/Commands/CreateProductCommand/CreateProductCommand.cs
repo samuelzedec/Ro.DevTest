@@ -9,5 +9,5 @@ public record CreateProductCommand(
     string Description,
     decimal UnitPrice,
     int AvailableQuantity,
-    ProductCategory ProductCategory
+    EProductCategory EProductCategory
 ) : IRequest<Result<CreateProductResponse>>;
