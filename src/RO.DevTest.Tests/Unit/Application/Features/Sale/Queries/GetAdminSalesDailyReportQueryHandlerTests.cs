@@ -78,7 +78,8 @@ public class GetAdminSalesDailyReportQueryHandlerTests
 
         _mockAdminSalesSummaryRepository
             .Setup(r => r.GetQueryable(
-                It.IsAny<Expression<Func<AdminSalesSummary, bool>>>()))
+                It.IsAny<Expression<Func<AdminSalesSummary, bool>>>(),
+                It.IsAny<Expression<Func<AdminSalesSummary, object>>[]>()))
             .Returns(mockDbSet.Object);
 
         // Act
