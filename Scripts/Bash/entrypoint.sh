@@ -4,7 +4,7 @@
 cd /app/src/RO.DevTest.Persistence
 
 # Esperar o banco subir
-sleep 2
+sleep 10
 
 # Aplicar migrations
 dotnet ef database update
