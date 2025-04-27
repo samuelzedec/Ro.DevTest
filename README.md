@@ -1,4 +1,4 @@
-**# API de E-commerce - Teste Técnico Rota das Oficinas
+# API de E-commerce - Teste Técnico Rota das Oficinas
 
 Olá! Me chamo Samuel Ribeiro e quero apresentar minha solução para o teste técnico da Rota das Oficinas: uma API de e-commerce em .NET 8 que gerencia clientes, produtos e vendas com autenticação JWT, paginação e análise de dados. Implementei testes unitários abrangentes e segui as melhores práticas de arquitetura, garantindo código limpo e funcional para todos os requisitos solicitados.
 
@@ -277,4 +277,4 @@ A API oferece um conjunto completo de endpoints para gerenciamento e análise de
       - Parâmetros de consulta: período para análise (startDate, endDate)
       - Retorno: Dados agregados incluindo valor total, quantidade de itens, número de transações e lista dos 5 produtos mais vendidos no período
 
-   - **Nota**: Todos os endpoints necessitam da view SQL `vw_admin_product_monthly_sales` para funcionamento correto**
+   - **Nota**: Todos os endpoints necessitam da view SQL `vw_admin_product_monthly_sales` para funcionamento correto
