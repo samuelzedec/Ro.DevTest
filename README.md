@@ -6,7 +6,7 @@ Olá! Me chamo Samuel Ribeiro e quero apresentar minha solução para o teste t�
 
 ### 🔐 Gerando Certificados para JWT
 O projeto utiliza certificados para assinar e validar tokens JWT. Siga estes passos para gerar os certificados necessários:
-> **Nota:** O OpenSSL é necessário para gerar certificados e lidar com aspectos de segurança da API.
+> **Nota:** O OpenSSL CLI é necessário para gerar certificados e lidar com aspectos de segurança da API.
 
 1. Navegue para a pasta certificates na raiz do projeto:
 ```bash
