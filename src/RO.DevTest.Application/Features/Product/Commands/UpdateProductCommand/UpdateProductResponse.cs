@@ -16,6 +16,6 @@ public record UpdateProductResponse
         Name = product.Name;
         Description = product.Description;
         UnitPrice = product.UnitPrice;
-        Category = product.ProductCategory.GetDescription();
+        Category = product.EProductCategory.GetDescription();
     }
 }

@@ -49,7 +49,7 @@ public class CreateProductCommandHandlerTests
             new Faker().Commerce.ProductDescription(),
             new Faker().Random.Decimal(9.99m, 599.99m),
             new Faker().Random.Int(1, 100),
-            ProductCategory.Automotive
+            EProductCategory.Automotive
         );
 
         _mockValidator
@@ -89,7 +89,7 @@ public class CreateProductCommandHandlerTests
             new Faker().Commerce.ProductDescription(),
             new Faker().Random.Decimal(9.99m, 599.99m),
             new Faker().Random.Int(1, 100),
-            ProductCategory.Automotive
+            EProductCategory.Automotive
         );
 
         _mockValidator
@@ -121,7 +121,7 @@ public class CreateProductCommandHandlerTests
             new Faker().Commerce.ProductDescription(),
             new Faker().Random.Decimal(9.99m, 599.99m),
             new Faker().Random.Int(1, 100),
-            ProductCategory.Automotive
+            EProductCategory.Automotive
         );
 
         _mockValidator

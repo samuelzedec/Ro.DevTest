@@ -72,7 +72,7 @@ public class SaleMap : IEntityTypeConfiguration<Sale>
             .IsRequired();
 
         builder
-            .Property(s => s.PaymentMethod)
+            .Property(s => s.EPaymentMethod)
             .HasColumnName("payment_method")
             .HasColumnType("SMALLINT")
             .IsRequired();

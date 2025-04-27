@@ -13,7 +13,7 @@ public record DeleteSaleResponse
     {
         SaleId = sale.Id;
         TransactionDate = sale.TransactionDate;
-        PaymentMethod = sale.PaymentMethod.GetDescription();
+        PaymentMethod = sale.EPaymentMethod.GetDescription();
         TotalPrice = sale.TotalPrice;
     }
 }

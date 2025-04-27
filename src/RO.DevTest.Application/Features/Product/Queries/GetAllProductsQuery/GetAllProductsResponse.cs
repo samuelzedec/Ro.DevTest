@@ -17,7 +17,7 @@ public class GetAllProductsResponse
         Name = product.Name;
         Description = product.Description;
         UnitPrice = product.UnitPrice;
-        Category = product.ProductCategory.GetDescription();
+        Category = product.EProductCategory.GetDescription();
         AdminName = product.Admin.Name;
     }
 }

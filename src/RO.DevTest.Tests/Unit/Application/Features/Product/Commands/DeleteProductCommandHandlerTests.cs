@@ -48,7 +48,7 @@ public class DeleteProductCommandHandlerTests
             Description = new Faker().Commerce.ProductDescription(),
             UnitPrice = new Faker().Random.Decimal(9.99m, 599.99m),
             AvailableQuantity = new Faker().Random.Int(1, 100),
-            ProductCategory = ProductCategory.Automotive
+            EProductCategory = EProductCategory.Automotive
         };
         
         _mockValidator
@@ -120,14 +120,14 @@ public class DeleteProductCommandHandlerTests
         // Arrange
         var command = new DeleteProductCommand(new Faker().Random.Guid());
 
-        List<ValidationFailure> validationFailures = [new("ProductId", "O Id do produto é obrigatório")];
-        var validationResult = new FluentValidation.Results.ValidationResult(validationFailures);
+        List<ValidationFailure> validationFailures = 
+            [new("ProductId", "O Id do produto é obrigatório")];
         
         _mockValidator
             .Setup(va => va.ValidateAsync(
                 It.IsAny<DeleteProductCommand>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult(validationFailures));
         
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

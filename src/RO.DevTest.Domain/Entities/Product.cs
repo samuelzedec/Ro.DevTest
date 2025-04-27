@@ -10,7 +10,7 @@ public class Product : BaseEntity
     public string Description { get; set; } = string.Empty;
     public decimal UnitPrice { get; set; }
     public int AvailableQuantity { get; set; }
-    public ProductCategory ProductCategory { get; set; }
+    public EProductCategory EProductCategory { get; set; }
     public Guid AdminId { get; set; }
     public User Admin { get; set; } = null!;
 }

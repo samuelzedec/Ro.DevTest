@@ -6,5 +6,5 @@ namespace RO.DevTest.Application.Features.Sale.Commands.UpdateSaleCommand;
 
 public record UpdateSaleCommand(
     Guid SaleId,
-    PaymentMethod PaymentMethod
+    EPaymentMethod EPaymentMethod
 ) : IRequest<Result<UpdateSaleResponse>>;

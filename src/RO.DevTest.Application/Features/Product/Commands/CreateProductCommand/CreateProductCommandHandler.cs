@@ -38,7 +38,7 @@ public class CreateProductCommandHandler(
                 Description = request.Description,
                 UnitPrice = request.UnitPrice,
                 AvailableQuantity = request.AvailableQuantity,
-                ProductCategory = request.ProductCategory
+                EProductCategory = request.EProductCategory
             };
 
             await productRepository.CreateAsync(product, cancellationToken);

@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace RO.DevTest.Domain.Enums;
 
-public enum ProductCategory
+public enum EProductCategory
 {
     [Description("Eletrônicos")]
     Electronics = 1,

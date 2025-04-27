@@ -15,7 +15,7 @@ public record GetMyPurchasesResponse
         SaleId = sale.Id;
         ProductName = sale.Product.Name;
         TransactionDate = sale.TransactionDate;
-        PaymentMethod = sale.PaymentMethod.GetDescription();
+        PaymentMethod = sale.EPaymentMethod.GetDescription();
         TotalPrice = sale.TotalPrice;
     }
 }

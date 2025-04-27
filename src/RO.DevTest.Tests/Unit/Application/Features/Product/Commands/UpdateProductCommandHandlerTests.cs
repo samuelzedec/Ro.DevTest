@@ -56,7 +56,7 @@ public class UpdateProductCommandHandlerTests
             Description = new Faker().Commerce.ProductDescription(),
             UnitPrice = new Faker().Random.Decimal(9.99m, 599.99m),
             AvailableQuantity = new Faker().Random.Int(1, 100),
-            ProductCategory = ProductCategory.Automotive
+            EProductCategory = EProductCategory.Automotive
         };
         
         _mockValidator
@@ -139,14 +139,14 @@ public class UpdateProductCommandHandlerTests
             new Faker().Random.Int(1, 100)
         );
         
-        List<ValidationFailure> validationFailures = [new("UnitPrice", "Preço unitário deve ser maior que zero")];
-        var validationResult = new FluentValidation.Results.ValidationResult(validationFailures);
+        List<ValidationFailure> validationFailures = 
+            [new("UnitPrice", "Preço unitário deve ser maior que zero")];
         
         _mockValidator
             .Setup(va => va.ValidateAsync(
                 It.IsAny<UpdateProductCommand>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult(validationFailures));
         
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

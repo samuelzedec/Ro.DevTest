@@ -32,7 +32,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .GreaterThanOrEqualTo(0)
             .WithMessage("Quantidade disponível deve ser maior ou igual a zero");
             
-        RuleFor(p => p.ProductCategory)
+        RuleFor(p => p.EProductCategory)
             .NotNull()
             .WithMessage("Categoria do produto é obrigatória")
             .IsInEnum()

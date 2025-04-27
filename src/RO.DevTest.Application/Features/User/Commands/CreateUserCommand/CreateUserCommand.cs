@@ -13,7 +13,7 @@ public record CreateUserCommand(
     string PasswordConfirmation
 ) : IRequest<Result<CreateUserResponse>>
 {
-    [JsonIgnore] public UserRoles Role { get; set; }
+    [JsonIgnore] public EUserRoles Role { get; set; }
 
     public Domain.Entities.Identity.User AssignTo() => new()
     {

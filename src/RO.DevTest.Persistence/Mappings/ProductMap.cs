@@ -46,7 +46,7 @@ public class ProductMap : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder
-            .Property(p => p.ProductCategory)
+            .Property(p => p.EProductCategory)
             .HasColumnType("SMALLINT")
             .HasColumnName("product_category")
             .IsRequired();
