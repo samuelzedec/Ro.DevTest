@@ -12,8 +12,8 @@ using RO.DevTest.Persistence;
 namespace RO.DevTest.Persistence.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250423201931_v9")]
-    partial class v9
+    [Migration("20250427040314_v10")]
+    partial class v10
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -334,6 +334,10 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("VARCHAR(455)")
                         .HasColumnName("description");
 
+                    b.Property<short>("EProductCategory")
+                        .HasColumnType("SMALLINT")
+                        .HasColumnName("product_category");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
                         .HasColumnName("modified_on");
@@ -342,10 +346,6 @@ namespace RO.DevTest.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(255)")
                         .HasColumnName("name");
-
-                    b.Property<short>("ProductCategory")
-                        .HasColumnType("SMALLINT")
-                        .HasColumnName("product_category");
 
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("NUMERIC(18,2)")
@@ -385,13 +385,13 @@ namespace RO.DevTest.Persistence.Migrations
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
                         .HasColumnName("deleted_at");
 
+                    b.Property<short>("EPaymentMethod")
+                        .HasColumnType("SMALLINT")
+                        .HasColumnName("payment_method");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("TIMESTAMP WITHOUT TIME ZONE")
                         .HasColumnName("modified_on");
-
-                    b.Property<short>("PaymentMethod")
-                        .HasColumnType("SMALLINT")
-                        .HasColumnName("payment_method");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("UUID")
@@ -458,7 +458,7 @@ namespace RO.DevTest.Persistence.Migrations
 
                     b.ToTable((string)null);
 
-                    b.ToView("vw_admin_product_sales", (string)null);
+                    b.ToView("vw_admin_product_monthly_sales", (string)null);
                 });
 
             modelBuilder.Entity("RO.DevTest.Domain.Entities.Identity.RoleClaim", b =>
